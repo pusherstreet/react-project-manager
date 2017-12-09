@@ -25,6 +25,13 @@ namespace project_manager.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             });
         }
+        [HttpGet("message")]
+        public string GetMessage()
+        {
+            // emulating long operation
+            System.Threading.Thread.Sleep(3000);
+            return "But its not funny!";
+        }
 
         public class WeatherForecast
         {

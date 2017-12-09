@@ -24,8 +24,8 @@ function renderApp() {
     // and injects the app into a DOM element.
     ReactDOM.render(
         <AppContainer>
-            <Provider store={ store }>
-                <ConnectedRouter history={ history } children={ routes } />
+            <Provider store={store}>
+                <ConnectedRouter history={history} children={routes} />              
             </Provider>
         </AppContainer>,
         document.getElementById('react-app')
