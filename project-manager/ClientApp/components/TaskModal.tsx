@@ -17,7 +17,7 @@ class TaskModal extends React.Component<any, {task: any}>{
     changeTask = (e: any) => {
 		let name = e.target.name;
 		let value = e.target.value;
-		console.log(this.state)
+		
 		let task = this.state.task;
 		task[name] = value;
 		this.setState({task: task})
@@ -54,12 +54,12 @@ class TaskModal extends React.Component<any, {task: any}>{
                   </tr>
                 <tr>
                   <td>Start</td>
-                  <td><DateTime value={task.start} onChange={this.changeStart}  /></td>
+                  <td><DateTime name="start" value={task.start} onChange={this.changeTask}  /></td>
                 </tr>
                 <tr>
                   <td>End</td>
                   <td>
-					  <DateTime value={task.end} onChange={this.changeEnd} /> 
+					          <DateTime name="end" value={task.end} onChange={this.changeTask} /> 
                   </td>
                 </tr>
                 <tr>
@@ -68,6 +68,8 @@ class TaskModal extends React.Component<any, {task: any}>{
 					<select name="statusID" value={this.props.selectedTask.statusID} onChange={this.changeTask} style={{width: "100%"}} >
 						<option value="1">Done</option>
 						<option value="2">New</option>
+            <option value="3">Canceled</option>
+            <option value="4">Approved</option>
 					</select>
 					</td>
                 </tr>

@@ -22,11 +22,18 @@ export default class NavMenu extends React.Component<any, {}> {
                     <ul className='nav navbar-nav'>
                         <li>
                             <NavLink exact to={ '/' } activeClassName='active'>
-                                <span className='glyphicon glyphicon-home'></span> Tasks
+                                <span className='glyphicon glyphicon-calendar'></span> Calendar
                             </NavLink>
-                            <NavLink to={ '/charts' } activeClassName='active'>
-                                <span className='glyphicon glyphicon-home'></span> Charts
+                            <NavLink to={ '/board' } activeClassName='active'>
+                                <span className='glyphicon glyphicon-list-alt'></span> Board
                             </NavLink>
+                            <NavLink to={ '/gantt' } activeClassName='active'>
+                                <span className='glyphicon glyphicon-stats'></span> Gantt
+                            </NavLink>
+                            <NavLink to={ '/table' } activeClassName='active'>
+                                <span className='glyphicon glyphicon-tasks'></span> Table
+                            </NavLink>
+                            
                         </li>
                         <li>
                             {

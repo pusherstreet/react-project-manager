@@ -11,6 +11,7 @@ namespace project_manager.Controllers
 {
     [Produces("application/json")]
     [Route("api/Tasks")]
+    
     public class TasksController : Controller
     {
         private Context db;
@@ -20,9 +21,8 @@ namespace project_manager.Controllers
         }
 
         // GET: api/Tasks
-        [Authorize]
-        [HttpGet]
-        public IEnumerable<Task> Get()
+        
+        private IEnumerable<Task> GetUserTasks()
         {
             var identity = User.Identity.Name;
             var userid = db.Users.FirstOrDefault(x => x.Email == identity).UserID;
@@ -30,8 +30,21 @@ namespace project_manager.Controllers
             return tasks;
         }
 
+        [HttpGet]
+        public IEnumerable<Task> Get()
+        { 
+            return GetUserTasks();
+        }
+
+        [HttpGet]
+        [Route("boards")]
+        public IEnumerable<Grouping<Status, Task>> GetBoards()
+        {
+            var tasks = db.Tasks.Include(x => x.Status);
+            return tasks.GroupBy(x => x.Status)
+                .Select(x => new Grouping<Status, Task> { Key = x.Key, Value = x.ToList() });
+        }
         // GET: api/Tasks/5
-        [Authorize]
         [HttpGet("{id}", Name = "Get")]
         public Task Get(int id)
         {
@@ -42,8 +55,15 @@ namespace project_manager.Controllers
         [HttpPost]
         public void Post([FromBody]Task task)
         {
-            db.Add(task);
-            db.SaveChanges();
+            task.Created = DateTime.Now;
+            var user = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name);
+            if(user != null)
+            {
+                task.UserID = user.UserID;
+                db.Add(task);
+                db.SaveChanges();
+            }
+            
         }
         
         // PUT: api/Tasks/5
@@ -54,6 +74,16 @@ namespace project_manager.Controllers
             db.Entry(task).State = EntityState.Modified;
             db.SaveChanges();
           
+        }
+
+        [Route("setstatus/{id}")]
+        [HttpPut]
+        public void ChangeStatus(int id, [FromBody] int statusID)
+        {
+            var task = db.Tasks.Find(id);
+            task.StatusID = statusID;
+            db.Entry(task).State = EntityState.Modified;
+            db.SaveChanges();
         }
         
         // DELETE: api/ApiWithActions/5

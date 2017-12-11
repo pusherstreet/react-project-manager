@@ -2,21 +2,13 @@
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from './';
 import callApi from '../helpers/callApi';
+import {Task} from '../models';
 
 export interface HomeState {
     tasks: Task[];
     selectedTask: any | null;
 }
 
-interface Task {
-    taskID: number;
-    title: string;
-    description: string;
-    created: Date;
-    start: Date;
-    end: Date;
-    statusID: any;
-}
 
 // Actions
 interface ReceiveData {
@@ -30,6 +22,9 @@ interface SelectTask{
 }
 interface CloseTask{
     type: "CLOSE_TASK"
+}
+interface AddTask{
+    type: "ADD_TASK"
 }
 
 // functions
@@ -75,6 +70,24 @@ export const actionCreators = {
             }
         })
         
+    },
+    addTask: (task: Task): AppThunkAction<SelectTask> => (dispatch: any, getState: Function) => {
+        let payload = task;
+        let requestData = {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+                'Content-Type': 'application/json;'
+            }
+        }
+        callApi('api/Tasks', requestData)
+        .then(response => {
+            if(response.ok){
+                dispatch(loadData());
+            }else{
+                console.log(response.statusText);
+            }
+        })
     }
 }
 

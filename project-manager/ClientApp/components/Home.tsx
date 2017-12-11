@@ -31,9 +31,9 @@ class Home extends React.Component<HomeProps, {}> {
         
         return <div>
 
-            <h1>Tasks</h1>
+            <h1>Calendar</h1>
             <div className="top-panel">
-                <AddTaskModal />
+                <AddTaskModal  onAdd ={this.props.addTask}/>
             </div>
             
             <BigCalendar events={tasks} onSelectEvent={(event) => this.props.selectTask(event.id)} startAccessor='start' endAccessor='end' style={{ height: 800 }} />
@@ -46,5 +46,6 @@ export default connect(
     (state: ApplicationState) => state,
     { loadData: HomeStore.actionCreators.loadData, 
         login: actionCreators.login, 
-        selectTask: HomeStore.actionCreators.selectTask }
+        selectTask: HomeStore.actionCreators.selectTask,
+    addTask :  HomeStore.actionCreators.addTask}
 )(Home) as typeof Home;

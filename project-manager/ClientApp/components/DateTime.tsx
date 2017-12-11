@@ -5,10 +5,13 @@ export default class DateTime extends React.Component<any, {date: string, time: 
 
     constructor(props: any){
         super();
-        this.state = {
+        this.state =  {
             date: DateHelper.toInputDate(new Date(props.value)),
             time: DateHelper.toInputTime(new Date(props.value))
         }
+    }
+    getHtmlObj = (datetime: string) => {
+        return {target: {name: this.props.name, value: datetime}}
     }
 
     public handleChange = (e: any) => {
@@ -20,8 +23,8 @@ export default class DateTime extends React.Component<any, {date: string, time: 
             this.setState({time: e.target.value})
             datetime = DateHelper.GetDateTime(this.state.date, e.target.value);
         }   
-        
-        this.props.onChange(datetime);
+        let htmlObj = this.getHtmlObj(datetime);
+        this.props.onChange(htmlObj);
     }
 
     render(){
