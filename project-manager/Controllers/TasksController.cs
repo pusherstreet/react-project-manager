@@ -36,6 +36,16 @@ namespace project_manager.Controllers
             return GetUserTasks();
         }
 
+        [Route("gantt")]
+        [HttpGet]
+        public GanttModel GetGantt()
+        {
+            var tasks = db.Tasks.ToList();
+            var links = db.TaskLines.Where(l => tasks.Any(t => t.TaskID == l.FromID || t.TaskID == l.ToID));
+            var gantt = new GanttModel(tasks, links);
+            return gantt;
+        }
+
         [HttpGet]
         [Route("boards")]
         public IEnumerable<Grouping<Status, Task>> GetBoards()
