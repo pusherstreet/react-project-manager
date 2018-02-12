@@ -11,6 +11,7 @@ namespace project_manager.Models
         public DbSet<Task> Tasks { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<TaskLine> TaskLines { get; set; }
 
         public Context(DbContextOptions<Context> options)
             : base(options)

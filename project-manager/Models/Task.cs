@@ -20,5 +20,6 @@ namespace project_manager.Models
         public Guid UserID { get; set; }
 
         public User User { get; set; }
+        public decimal Progress { get; set; }
     }
 }

@@ -28,7 +28,7 @@ export default class NavMenu extends React.Component<any, {}> {
                                 <span className='glyphicon glyphicon-list-alt'></span> Board
                             </NavLink>
                             <NavLink to={ '/gantt' } activeClassName='active'>
-                                <span className='glyphicon glyphicon-stats'></span> Gantt
+                                <span className='glyphicon glyphicon-stats'></span> Timeline
                             </NavLink>
                             <NavLink to={ '/table' } activeClassName='active'>
                                 <span className='glyphicon glyphicon-tasks'></span> Table
