@@ -33,7 +33,7 @@ namespace project_manager.Controllers
         [HttpGet]
         public IEnumerable<Task> Get()
         { 
-            return GetUserTasks();
+            return db.Tasks.ToList();
         }
 
         [HttpGet]

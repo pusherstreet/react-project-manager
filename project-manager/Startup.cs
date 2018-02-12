@@ -55,7 +55,8 @@ namespace project_manager
             string connection = Configuration.GetConnectionString("DefaultConnection");
           
             services.AddDbContext<Context>(options =>
-                options.UseSqlServer(connection));
+                options.UseInMemoryDatabase("db"));
+            
             services.AddMvc()
                 .AddJsonOptions(
                     options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -78,9 +79,15 @@ namespace project_manager
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            
             app.UseAuthentication();
             app.UseStaticFiles();
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<Context>();
+                InitDatabase(context);
+            }
+           
 
             app.UseMvc(routes =>
             {
@@ -92,6 +99,32 @@ namespace project_manager
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
+        }
+        // Initialize in memory database
+        private void InitDatabase(Context db){
+            var guid = new Guid();
+            db.Users.Add(new User(){
+                Email = "test@email.com",
+                Password = "123",
+                UserID = guid,
+            });
+            db.Statuses.AddRange(new Status[]{
+                new Status { StatusID = 1, Name = "Done"},
+                new Status {StatusID = 2, Name = "Created"},
+                new Status {StatusID = 3, Name = "Canceled"},
+                new Status {StatusID = 4, Name = "Approvved"},
+            });
+            db.Tasks.Add(new project_manager.Models.Task(){
+                TaskID = 1,
+                Title = "Website Testing",
+                Description = "Do website testing",
+                Start = DateTime.Now,
+                End = DateTime.Now.AddHours(1),
+                Created = DateTime.Now,
+                UserID = guid,
+                StatusID = 4
+            });
+            db.SaveChanges();
         }
     }
 }
