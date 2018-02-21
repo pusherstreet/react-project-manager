@@ -6,6 +6,7 @@ import Home from './components/Home';
 import BoardComponent from './components/BoardComponent';
 import GanttComponent from './components/GanttComponent';
 import Table from './components/Table';
+import Import from './components/Import';
 
 
 export const routes = <Layout>
@@ -13,4 +14,5 @@ export const routes = <Layout>
     <Route exact path='/board' component={BoardComponent} />
     <Route exact path='/gantt' component={GanttComponent} />
     <Route exact path='/table' component={Table} />
+    <Route exact path='/import' component={Import} />
 </Layout>;

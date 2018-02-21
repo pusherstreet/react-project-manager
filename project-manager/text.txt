@@ -1,8 +1,2 @@
->>"Then I tested the internal notes by adding something but leaving the appointment blue and I did not receive an email.  
->>Then I changed the appointment back to red and I did not receive an email.
->>Then I added another note to internal notes and changed it from blue to red and I did not receive an email." - 
-We have added a email sending when something is changed or added to Internal Notes.
->>"Then I removed the note from internal notes and put one in notes and left the status as red and I did not receive an email.  
->>Then I removed the note from notes and did not receive an email.  
->>I tried adding notes to both areas of another appointment and did not get any email notifications." - 
-we send email when status of an appointment is “blue”.
+According to Task #409 only “first name”, “last name” and “email address” should be required fields 
+and “Preferred Time” box should be an empty by default (see attached doc).  

@@ -11,13 +11,14 @@ import * as moment from 'moment';
 import TaskModal from './TaskModal';
 import { Button } from 'react-bootstrap';
 import AddTaskModal from './AddTaskModal';
+import {GoogleImport} from '../helpers/import';
 
 type HomeProps = ApplicationState & typeof HomeStore.actionCreators & typeof actionCreators & RouteComponentProps<{}>;
 BigCalendar.momentLocalizer(moment);
 
 class Home extends React.Component<HomeProps, {}> {
     public componentWillMount() {
-        this.props.auth.isAuth && this.props.loadData() ;
+        let client = new GoogleImport();
     }
     public render() {
         let tasks = this.props.home.tasks.map(el => {

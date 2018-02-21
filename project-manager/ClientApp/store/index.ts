@@ -3,6 +3,7 @@ import * as Auth from './Auth';
 import * as Board from './Board';
 import * as Gantt from './Gantt';
 import * as Table from './Table';
+import * as Import from './Import';
 
 // The top-level state object
 export interface ApplicationState {
@@ -11,6 +12,7 @@ export interface ApplicationState {
     board: Board.BoardState;
     gantt: Gantt.GanttState;
     table: Table.TableState;
+    import: Import.ImportState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -21,7 +23,8 @@ export const reducers = {
     auth: Auth.reducer,
     board: Board.reducer,
     gantt: Gantt.reducer,
-    table: Table.reducer
+    table: Table.reducer,
+    import: Import.reducer
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

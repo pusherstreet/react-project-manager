@@ -113,6 +113,7 @@ namespace project_manager
                 new Status {StatusID = 2, Name = "Created"},
                 new Status {StatusID = 3, Name = "Canceled"},
                 new Status {StatusID = 4, Name = "Approvved"},
+                new Status {StatusID = 5, Name = "Confirmed"}
             });
             db.Tasks.Add(new project_manager.Models.Task(){
                 TaskID = 1,
@@ -122,7 +123,8 @@ namespace project_manager
                 End = DateTime.Now.AddHours(1),
                 Created = DateTime.Now,
                 UserID = guid,
-                StatusID = 4
+                StatusID = 1,
+                Status = new Status { StatusID = 1, Name = "Done"}
             });
             db.SaveChanges();
         }

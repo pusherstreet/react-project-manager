@@ -32,8 +32,9 @@ namespace project_manager.Controllers
 
         [HttpGet]
         public IEnumerable<Task> Get()
-        { 
-            return db.Tasks.ToList();
+        {
+            var tasks = db.Tasks.Include(x => x.Status).ToList(); 
+            return tasks;
         }
 
         [Route("gantt")]

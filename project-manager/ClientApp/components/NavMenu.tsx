@@ -33,7 +33,9 @@ export default class NavMenu extends React.Component<any, {}> {
                             <NavLink to={ '/table' } activeClassName='active'>
                                 <span className='glyphicon glyphicon-tasks'></span> Table
                             </NavLink>
-                            
+                            <NavLink to={ '/import' } activeClassName='active'>
+                                <span className='glyphicon glyphicon-import'></span> Import
+                            </NavLink>
                         </li>
                         <li>
                             {

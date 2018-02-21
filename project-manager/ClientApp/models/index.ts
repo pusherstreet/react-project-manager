@@ -18,3 +18,20 @@ export interface BoardModel{
     key: Status;
     value: Task[];
 }
+
+export interface GoogleEvent{
+    ID: string;
+    Created: Date;
+    Creator: GoogleUser;
+    Start: Date;
+    End: Date;
+    Organizer: GoogleUser;
+    Status: string;
+    Summary: string;
+}
+
+export interface GoogleUser{
+    Email: string;
+    DisplayName: string;
+    Self: boolean;
+}
