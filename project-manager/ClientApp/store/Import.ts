@@ -54,8 +54,10 @@ const loadGoogleTasks = (): AppThunkAction<LoadGoogleTasks> => (dispatch: any, g
 export const actionCreators = {
     loadGoogleTasks: loadGoogleTasks,
     init: (): AppThunkAction<LoadGoogleTasks> => (dispatch: any, getState: Function) => {
-        //console.log('init');
         googleClient.init();
+    },
+    logout: (): AppThunkAction<LoadGoogleTasks> => (dispatch: any, getState: Function) => {
+        googleClient.IsSignIn && googleClient.signOut();
     }
 }
 
