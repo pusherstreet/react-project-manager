@@ -34,6 +34,7 @@ const loadData = (): AppThunkAction<ReceiveData> => (dispatch: any, getState: Fu
             return response.json()
         })
         .then(data => {
+            console.log(data);
             dispatch({ type: 'RECEIVE_DATA', tasks: data });
         });
 }

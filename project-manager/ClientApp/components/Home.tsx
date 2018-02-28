@@ -18,7 +18,7 @@ BigCalendar.momentLocalizer(moment);
 
 class Home extends React.Component<HomeProps, {}> {
     public componentWillMount() {
-        let client = new GoogleImport();
+        this.props.auth.isAuth && this.props.loadData();
     }
     public render() {
         let tasks = this.props.home.tasks.map(el => {

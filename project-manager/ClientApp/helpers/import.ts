@@ -7,7 +7,13 @@ export class GoogleImport {
     private SCOPES: string = "https://www.googleapis.com/auth/calendar.readonly";
 
     public init = () => {
-        gapi.load('client:auth2', this.initClient);
+        if(gapi.client){
+            if(this.IsSignIn()){
+                gapi.auth2.getAuthInstance().signOut();
+            }
+        }else{
+            gapi.load('client:auth2', this.initClient);
+        }   
     }
 
     public IsSignIn = (): boolean => {
@@ -15,8 +21,8 @@ export class GoogleImport {
     }
 
     public signIn = () => {
-        if(this.IsSignIn){
-            this.listUpcomingEvents()
+        if(this.IsSignIn()){
+            this.GetEvents();
         }
         else{
             gapi.auth2.getAuthInstance().signIn();
@@ -25,12 +31,8 @@ export class GoogleImport {
 
     public OnListEvents: Function|null = null;
 
-    public signOut = () => {
-        gapi.getAuthInstance.signOut();
-    }
-
-    public listUpcomingEvents = () => {
-        if(this.IsSignIn){
+    public GetEvents = () => {
+        if(this.IsSignIn()){
             gapi.client.calendar.events.list({
                 'calendarId': 'primary',
                 'showDeleted': false,
@@ -53,8 +55,11 @@ export class GoogleImport {
           discoveryDocs: this.DISCOVERY_DOCS,
           scope: this.SCOPES
         }).then(() => {
-            gapi.auth2.getAuthInstance().isSignedIn.listen(this.listUpcomingEvents);
             console.log('init');
+            gapi.auth2.getAuthInstance().isSignedIn.listen((signin:boolean) => {console.log(signin); if(signin) this.GetEvents() });
+            if(this.IsSignIn()){
+                gapi.auth2.getAuthInstance().signOut();
+            }
         });
       }
 }

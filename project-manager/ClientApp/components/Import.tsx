@@ -14,7 +14,22 @@ class Import extends React.Component<ImportProps, {}>{
     render(){
         return <div>
             <h2>Import</h2>
-            <button onClick={() => {this.props.loadGoogleTasks()}}>Google Import</button>
+            {
+                this.props.googleLoaded ?
+                <div>
+                    <h4>Imported events:</h4>
+                    <ul>
+                        {
+                            this.props.events.map((el, index) => {
+                                return <li key={index}>{el.Summary},&nbsp;&nbsp;&nbsp;
+                                {el.ID}</li>
+                            })
+                        }
+                    </ul>
+
+                </div> :
+                <button className= "btn btn-info" onClick={() => {this.props.loadGoogleTasks()}}>Google Import</button>
+            }
         </div>
     }
 }
