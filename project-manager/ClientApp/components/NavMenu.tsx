@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap/lib/InputGroup';
+import '../css/site.css';
 
 
 export default class NavMenu extends React.Component<any, {}> {
@@ -21,6 +22,13 @@ export default class NavMenu extends React.Component<any, {}> {
                 <div className='navbar-collapse collapse'>
                     <ul className='nav navbar-nav'>
                         <li>
+                            <div className="navbar-title">Projects</div>
+                            <NavLink exact to={ '/default' } activeClassName='active'>
+                                <span className='glyphicon glyphicon-expand'></span> Default Project
+                            </NavLink>
+                        </li>
+                        <li>
+                            <div className="navbar-title">Tasks</div>
                             <NavLink exact to={ '/' } activeClassName='active'>
                                 <span className='glyphicon glyphicon-calendar'></span> Calendar
                             </NavLink>
@@ -31,10 +39,26 @@ export default class NavMenu extends React.Component<any, {}> {
                                 <span className='glyphicon glyphicon-stats'></span> Timeline
                             </NavLink>
                             <NavLink to={ '/table' } activeClassName='active'>
-                                <span className='glyphicon glyphicon-tasks'></span> Table
+                                <span className='glyphicon glyphicon-tasks'></span> List
                             </NavLink>
+                            
+                        </li>
+                        <li>
+                            <div className="navbar-title">Data</div>
                             <NavLink to={ '/import' } activeClassName='active'>
                                 <span className='glyphicon glyphicon-import'></span> Import
+                            </NavLink>
+                            <NavLink to={ '/export' } activeClassName='active'>
+                                <span className='glyphicon glyphicon-export'></span> Export
+                            </NavLink>
+                        </li>
+                        <li>
+                            <div className="navbar-title">Settings</div>
+                            <NavLink to={ '/account' } activeClassName='active'>
+                                <span className='glyphicon glyphicon-user'></span> Account
+                            </NavLink>
+                            <NavLink to={ '/configuration' } activeClassName='active'>
+                                <span className='glyphicon glyphicon-cog'></span> Configuration
                             </NavLink>
                         </li>
                         <li>
