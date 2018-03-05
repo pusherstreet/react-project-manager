@@ -35,7 +35,29 @@ const loadTasks = (): AppThunkAction<LoadTasks> => (dispatch: any, getState: Fun
 }
 
 export const ActionCreators = {
-    loadTasks: loadTasks
+    loadTasks: loadTasks,
+    addLink: (link: any): AppThunkAction<LoadTasks> => (dispatch: any, getState: Function) => {
+        const payload = {
+            fromid : link.source,
+            toid : link.target,
+            type : link.type
+        };
+        const requestData = {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+                'Content-Type': 'application/json;'
+            }
+        };
+        callApi('api/links', requestData)
+        .then(response => {
+            if(response.ok){
+                dispatch(loadTasks());
+            }else{
+                console.log(response.statusText);
+            }
+        })
+    }
 }
 
 type KnownAction = LoadTasks;

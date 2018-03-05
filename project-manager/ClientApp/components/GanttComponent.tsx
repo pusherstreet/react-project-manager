@@ -45,6 +45,7 @@ class GanttComponent extends React.Component<GanttProps, {currentZoom: string}> 
         <Gantt
           tasks={this.props.tasks}
           zoom={this.state.currentZoom}
+          onlinkchange={this.props.addLink.bind(this)}
         />
       </div>
       </div>

@@ -4,9 +4,12 @@ import 'dhtmlx-gantt/codebase/dhtmlxgantt.css';
  
 export default class Gantt extends React.Component<any, {}> {
   componentDidMount() {
-    console.log('mount')
-    gantt.init(this.ganttContainer);
-    gantt.parse(this.props.tasks);
+        console.log('mount')
+        gantt.init(this.ganttContainer);
+        gantt.attachEvent("onAfterLinkAdd", (id: any, item: any) => {
+            this.props.onlinkchange(item);
+        });
+        gantt.parse(this.props.tasks);
   }
 
   ganttContainer: any;

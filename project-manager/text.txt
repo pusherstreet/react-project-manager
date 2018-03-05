@@ -1,2 +1,2 @@
-According to Task #409 only “first name”, “last name” and “email address” should be required fields 
-and “Preferred Time” box should be an empty by default (see attached doc).  
+Нам потрібен доступ до пісочниці для тестування створення заказів через Affirm.
+Якщо ви вже створили affirm merchant аккаунт, будь-ласка надайте нам доступ до пісочниці http://sandbox.affirm.com/dashboard.

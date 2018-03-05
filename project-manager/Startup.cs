@@ -126,6 +126,17 @@ namespace project_manager
                 StatusID = 1,
                 Status = new Status { StatusID = 1, Name = "Done"}
             });
+            db.Tasks.Add(new project_manager.Models.Task(){
+                TaskID = 2,
+                Title = "SQL Script Execute",
+                Description = "Clean up testing emails",
+                Start = DateTime.Now.AddDays(5),
+                End = DateTime.Now.AddDays(11),
+                Created = DateTime.Now,
+                UserID = guid,
+                StatusID = 2,
+                Status = new Status { StatusID = 1, Name = "Done"}
+            });
             db.SaveChanges();
         }
     }
