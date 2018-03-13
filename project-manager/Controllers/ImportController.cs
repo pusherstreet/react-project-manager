@@ -12,10 +12,9 @@ namespace project_manager.Controllers
     [Produces("application/json")]
     [Route("api/import")]
     
-    public class ImportController : Controller
+    public class ImportController : BaseController
     {
-        private Context db;
-        public ImportController(Context context)
+        public ImportController(Context context): base(context)
         {
             db = context;
         }

@@ -5,6 +5,9 @@ import '../css/site.css';
 
 
 export default class NavMenu extends React.Component<any, {}> {
+    componentWillMount(){
+        this.props.loadProjects();
+    }
     public render() {
         return <div className='main-nav'>
                 <div className='navbar navbar-inverse'>
@@ -23,9 +26,13 @@ export default class NavMenu extends React.Component<any, {}> {
                     <ul className='nav navbar-nav'>
                         <li>
                             <div className="navbar-title">Projects</div>
-                            <NavLink exact to={ '/default' } activeClassName='active'>
-                                <span className='glyphicon glyphicon-expand'></span> Default Project
-                            </NavLink>
+                            {
+                                this.props.projects.map((el: any, key:number) => {
+                                    return <div key={key} onClick={() => {this.props.setCurrentProject(el)}} className={"project-link " + (this.props.currentProject.projectID == el.projectID ? "active-project": "")}>
+                                        <span className='glyphicon glyphicon-star'></span> {el.title}
+                                    </div>
+                                })
+                            }
                         </li>
                         <li>
                             <div className="navbar-title">Tasks</div>

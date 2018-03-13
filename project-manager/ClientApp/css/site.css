@@ -71,3 +71,11 @@
     border-bottom: 1px solid;
     margin-bottom: 5px;
 }
+.project-link{
+    color: white;
+    cursor: pointer;
+    padding: 5px 15px;
+}
+.active-project{
+    background-color: #7ea740;
+}

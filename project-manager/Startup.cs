@@ -100,9 +100,9 @@ namespace project_manager
                     defaults: new { controller = "Home", action = "Index" });
             });
         }
-        // Initialize in memory database
+        // Initialize in-memory database
         private void InitDatabase(Context db){
-            var guid = new Guid();
+            var guid = Guid.NewGuid();
             db.Users.Add(new User(){
                 Email = "test@email.com",
                 Password = "123",
@@ -112,7 +112,7 @@ namespace project_manager
                 new Status { StatusID = 1, Name = "Done"},
                 new Status {StatusID = 2, Name = "Created"},
                 new Status {StatusID = 3, Name = "Canceled"},
-                new Status {StatusID = 4, Name = "Approvved"},
+                new Status {StatusID = 4, Name = "Approved"},
                 new Status {StatusID = 5, Name = "Confirmed"}
             });
             db.Tasks.Add(new project_manager.Models.Task(){
@@ -124,7 +124,8 @@ namespace project_manager
                 Created = DateTime.Now,
                 UserID = guid,
                 StatusID = 1,
-                Status = new Status { StatusID = 1, Name = "Done"}
+                Status = new Status { StatusID = 1, Name = "Done"},
+                ProjectID = 1
             });
             db.Tasks.Add(new project_manager.Models.Task(){
                 TaskID = 2,
@@ -135,8 +136,41 @@ namespace project_manager
                 Created = DateTime.Now,
                 UserID = guid,
                 StatusID = 2,
-                Status = new Status { StatusID = 1, Name = "Done"}
+                Status = new Status { StatusID = 1, Name = "Done"},
+                ProjectID = 1
             });
+            db.Projects.Add(
+                new Project{
+                    ProjectID = 1,
+                    Title = "Default project",
+                    Description = "Default project",
+                    UserID = guid,
+                    Created = DateTime.Now
+                }
+            );
+            db.Projects.Add(
+                new Project{
+                    ProjectID = 2,
+                    Title = "Startup project",
+                    Description = "Startup project",
+                    UserID = guid,
+                    Created = DateTime.Now
+                }
+            );
+            db.UserToProjects.Add(
+                new UserToProject{
+                    UserToProjectID = 1,
+                    UserID = guid,
+                    ProjectID = 1
+                }
+            );
+             db.UserToProjects.Add(
+                new UserToProject{
+                    UserToProjectID = 2,
+                    UserID = guid,
+                    ProjectID = 2
+                }
+            );
             db.SaveChanges();
         }
     }

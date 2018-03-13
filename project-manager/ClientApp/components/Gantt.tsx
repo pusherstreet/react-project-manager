@@ -9,6 +9,10 @@ export default class Gantt extends React.Component<any, {}> {
         gantt.attachEvent("onAfterLinkAdd", (id: any, item: any) => {
             this.props.onlinkchange(item);
         });
+        gantt.attachEvent("onAfterTaskUpdate", (id: any, type:string, e:any) => {
+			if(type == 'resize')
+            	this.props.ontaskresize(id, e);
+        })
         gantt.parse(this.props.tasks);
   }
 

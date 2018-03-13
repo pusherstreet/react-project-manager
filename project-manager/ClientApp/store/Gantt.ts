@@ -57,6 +57,9 @@ export const ActionCreators = {
                 console.log(response.statusText);
             }
         })
+    },
+    resizeTask: (id: any, event: any): AppThunkAction<LoadTasks> => (dispatch: any, getState: Function) => {
+        console.log(event);
     }
 }
 

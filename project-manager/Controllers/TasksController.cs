@@ -12,10 +12,9 @@ namespace project_manager.Controllers
     [Produces("application/json")]
     [Route("api/Tasks")]
     
-    public class TasksController : Controller
+    public class TasksController : BaseController
     {
-        private Context db;
-        public TasksController(Context context)
+        public TasksController(Context context) : base(context)
         {
             db = context;
         }

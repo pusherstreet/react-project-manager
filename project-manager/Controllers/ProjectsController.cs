@@ -10,19 +10,14 @@ using Microsoft.AspNetCore.Authorization;
 namespace project_manager.Controllers
 {
     [Produces("application/json")]
-    [Route("api/links")]
-    public class LinksController : BaseController
-    {
-        public LinksController(Context _db): base(_db){
+    [Route("api/projects")]
+    public class ProjectController: BaseController{
+        public ProjectController(Context _db) : base(_db){
             db = _db;
         }
-        [HttpPost]
-        public void Post([FromBody]TaskLine link){
-            if(link == null){
-                HttpContext.Response.StatusCode = 500;
-            }
-            db.Add(link);
-            db.SaveChanges();
+        [HttpGet]
+        public IEnumerable<Project> Get(){
+            return GetUserData(db.Projects);
         }
     }
 }

@@ -1,2 +1,4 @@
+Якщо ви створили Affirm merchant account надайте нам доступ до пісониці.
 Нам потрібен доступ до пісочниці для тестування створення заказів через Affirm.
-Якщо ви вже створили affirm merchant аккаунт, будь-ласка надайте нам доступ до пісочниці http://sandbox.affirm.com/dashboard.
+ посиланні https://docs.affirm.com/Merchant_Resources/Merchant_Daily_Operations/Accessing_the_Dashboard 
+вказано як надати доступ іншим користувачам.
