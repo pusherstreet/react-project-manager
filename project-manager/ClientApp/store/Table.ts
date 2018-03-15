@@ -17,7 +17,9 @@ const initialState = {
 }
 
 const loadTasks = (): AppThunkAction<LoadTableTasks> => (dispatch: any, getState: Function) => {
-    callApi('api/Tasks/')
+    let project = getState().project.currentProject;
+    let projectID = project ? project.projectID : 1;
+    callApi(`api/Tasks/list/${projectID}`)
     .then(response => response.json())
     .then(data => {
         dispatch({type: "LOAD_TABLE_TASKS", payload: data})

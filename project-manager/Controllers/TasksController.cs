@@ -30,9 +30,10 @@ namespace project_manager.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Task> Get()
+        [Route("list/{projectid}")]
+        public IEnumerable<Task> GetTasks(int projectid)
         {
-            var tasks = db.Tasks.Include(x => x.Status).ToList(); 
+            var tasks = db.Tasks.Include(x => x.Status).Where(x => x.ProjectID == projectid).ToList(); 
             return tasks;
         }
 
@@ -63,17 +64,21 @@ namespace project_manager.Controllers
         
         // POST: api/Tasks
         [HttpPost]
-        public void Post([FromBody]Task task)
+        [Route("{projectid}")]
+        public Task Post([FromBody]Task task, int projectid)
         {
             task.Created = DateTime.Now;
             var user = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name);
             if(user != null)
             {
                 task.UserID = user.UserID;
+                task.TaskID = db.Tasks.Count() + 1;
+                task.ProjectID = projectid;
                 db.Add(task);
                 db.SaveChanges();
+                return task;
             }
-            
+            return null;
         }
         
         // PUT: api/Tasks/5

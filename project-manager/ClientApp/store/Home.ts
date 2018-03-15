@@ -7,35 +7,43 @@ import {Task} from '../models';
 export interface HomeState {
     tasks: Task[];
     selectedTask: any | null;
+    fetchedProject: number | null;
 }
 
 
 // Actions
 interface ReceiveData {
-    type: "RECEIVE_DATA",
-    tasks: Task[] 
+    type: "RECEIVE_CALENDAR_TASKS",
+    tasks: Task[],
+    fetchedProject: number
 }
 
 interface SelectTask{
-    type: "SELECT_TASK",
+    type: "SELECT_CALENDAR_TASK",
     task: Task | null
 }
 interface CloseTask{
-    type: "CLOSE_TASK"
+    type: "CLOSE_CALENDAR_TASK"
 }
 interface AddTask{
-    type: "ADD_TASK"
+    type: "ADD_TASK",
+    task: Task
+}
+interface UpdateTask{
+    type: "UPDATE_CALENDAR_TASK",
+    task: Task
 }
 
 // functions
-const loadData = (): AppThunkAction<ReceiveData> => (dispatch: any, getState: Function) => {  
-    let fetchTask = callApi('api/Tasks')
+const loadData = (): AppThunkAction<ReceiveData> => (dispatch: any, getState: Function) => {
+    let project = getState().project.currentProject;
+    let projectID = project ? project.projectID : 1;
+    let fetchTask = callApi(`api/Tasks/list/${projectID}`)
         .then(response => {
             return response.json()
         })
         .then(data => {
-            console.log(data);
-            dispatch({ type: 'RECEIVE_DATA', tasks: data });
+            dispatch({ type: 'RECEIVE_CALENDAR_TASKS', tasks: data, fetchedProject: projectID });
         });
 }
 
@@ -46,11 +54,11 @@ export const actionCreators = {
         callApi(`api/Tasks/${id}`)
         .then(response => response.json())
         .then(data => {
-            dispatch({type: 'SELECT_TASK', task: data});
+            dispatch({type: 'SELECT_CALENDAR_TASK', task: data});
         })
     },
     closeTask: (): AppThunkAction<SelectTask> => (dispatch: any, getState: Function) => {
-        dispatch({type: "CLOSE_TASK"})
+        dispatch({type: "CLOSE_CALENDAR_TASK"})
     },
     updateTask: (task: Task): AppThunkAction<SelectTask> => (dispatch: any, getState: Function) => {
         let payload = task;
@@ -64,8 +72,8 @@ export const actionCreators = {
         callApi(`api/Tasks/${task.taskID}`, requestData)
         .then(response => {
             if(response.ok){
-                dispatch({type: 'CLOSE_TASK'});
-                dispatch(loadData());
+                dispatch({type: 'CLOSE_CALENDAR_TASK'});
+                dispatch({type: 'UPDATE_CALENDAR_TASK', task: task});
             }else{
                 console.log(response.statusText)
             }
@@ -81,28 +89,43 @@ export const actionCreators = {
                 'Content-Type': 'application/json;'
             }
         }
-        callApi('api/Tasks', requestData)
-        .then(response => {
-            if(response.ok){
-                dispatch(loadData());
-            }else{
-                console.log(response.statusText);
-            }
+        let project = getState().project.currentProject;
+        let projectID = project ? project.projectID : 1;
+        callApi(`api/Tasks/${projectID}`, requestData)
+        .then(response => response.json())
+        .then(data => {
+            dispatch({type: "ADD_TASK", task: data});
         })
     }
 }
 
-type KnownAction = ReceiveData & SelectTask;
+type KnownAction = ReceiveData & SelectTask & AddTask;
 
-export const reducer: Reducer<HomeState> = (state: HomeState = {tasks: [], selectedTask: null} , incomAction: Action) => {
+export const reducer: Reducer<HomeState> = (state: HomeState = {tasks: [], selectedTask: null, fetchedProject: null} , incomAction: Action) => {
     const action = incomAction as KnownAction;
     switch (action.type) {
-        case 'RECEIVE_DATA':
-            return {...state, tasks: action.tasks } ;
-        case 'SELECT_TASK':
+        case 'RECEIVE_CALENDAR_TASKS':
+            return {...state, tasks: action.tasks, fetchedProject: action.fetchedProject } ;
+        case 'SELECT_CALENDAR_TASK':
             return {...state, selectedTask: action.task};
-        case 'CLOSE_TASK':
+        case 'CLOSE_CALENDAR_TASK':
             return {...state, selectedTask: null};
+        case 'ADD_TASK':
+            let newArray = state.tasks.slice();
+            newArray.push(action.task);
+            return {...state, tasks: newArray};
+        case 'UPDATE_CALENDAR_TASK':
+            let updateArray = state.tasks.map(el => {
+                if(el.taskID !== action.task.taskID){
+                    return el;
+                }
+                return {
+                    ...el,
+                    ...action.task
+                }
+            })
+            return {...state, tasks: updateArray};
+            
         default:
             return state;
     }

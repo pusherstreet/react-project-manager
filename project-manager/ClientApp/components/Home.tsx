@@ -12,15 +12,20 @@ import TaskModal from './TaskModal';
 import { Button } from 'react-bootstrap';
 import AddTaskModal from './AddTaskModal';
 import {GoogleImport} from '../helpers/import';
+import {ProjectState} from '../store/Project';
 
-type HomeProps = ApplicationState & typeof HomeStore.actionCreators & typeof actionCreators & RouteComponentProps<{}>;
+type HomeProps = ApplicationState & typeof HomeStore.actionCreators & typeof actionCreators & RouteComponentProps<{}> & ProjectState;
 BigCalendar.momentLocalizer(moment);
 
 class Home extends React.Component<HomeProps, {}> {
-    public componentWillMount() {
-        this.props.auth.isAuth && this.props.loadData();
+    shouldLoadData(){
+        if(!this.props.project.currentProject){
+            return false;
+        }
+        return !this.props.home.fetchedProject || this.props.home.fetchedProject != this.props.project.currentProject.projectID;
     }
     public render() {
+        this.shouldLoadData() && this.props.loadData();
         let tasks = this.props.home.tasks.map(el => {
             return {
                 id: el.taskID,

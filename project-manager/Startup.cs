@@ -137,7 +137,7 @@ namespace project_manager
                 UserID = guid,
                 StatusID = 2,
                 Status = new Status { StatusID = 1, Name = "Done"},
-                ProjectID = 1
+                ProjectID = 2
             });
             db.Projects.Add(
                 new Project{

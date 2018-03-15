@@ -18,7 +18,7 @@ interface LoadProjects{
     payload: any[];
 }
 interface CurrentProject{
-    type: "CURRENT_PROJECT";
+    type: "CURRENT_PROJECT_CHANGE";
     payload: any;
 }
 
@@ -31,7 +31,10 @@ export const actionCreators = {
         });
     },
     setCurrentProject: (project: any): AppThunkAction<CurrentProject> => (dispatch: any, getState: Function) => {
-        dispatch({type: "CURRENT_PROJECT", payload: project});
+        console.log(getState());
+        if(getState().project.currentProject.projectID !== project.projectID){
+            dispatch({type: "CURRENT_PROJECT_CHANGE", payload: project});
+        }
     }
 }
 
@@ -42,7 +45,7 @@ export const reducer : Reducer<ProjectState> = (state: ProjectState = initialSta
     switch(action.type){
         case "LOAD_PROJECTS":
             return {...state, projectList: action.payload, currentProject: action.payload[0]};
-        case "CURRENT_PROJECT":
+        case "CURRENT_PROJECT_CHANGE":
             return {...state, currentProject: action.payload};
     }
     return state;
