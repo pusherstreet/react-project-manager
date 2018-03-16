@@ -12,21 +12,14 @@ import TaskModal from './TaskModal';
 import { Button } from 'react-bootstrap';
 import AddTaskModal from './AddTaskModal';
 import {GoogleImport} from '../helpers/import';
-import {ProjectState} from '../store/Project';
+import * as Project from '../store/Project';
 
-type HomeProps = ApplicationState & typeof HomeStore.actionCreators & typeof actionCreators & RouteComponentProps<{}> & ProjectState;
+type HomeProps = ApplicationState & typeof HomeStore.actionCreators & typeof actionCreators & RouteComponentProps<{}> & Project.ProjectState & typeof Project.actionCreators;
 BigCalendar.momentLocalizer(moment);
 
 class Home extends React.Component<HomeProps, {}> {
-    shouldLoadData(){
-        if(!this.props.project.currentProject){
-            return false;
-        }
-        return !this.props.home.fetchedProject || this.props.home.fetchedProject != this.props.project.currentProject.projectID;
-    }
     public render() {
-        this.shouldLoadData() && this.props.loadData();
-        let tasks = this.props.home.tasks.map(el => {
+        let tasks = this.props.project.tasks.map(el => {
             return {
                 id: el.taskID,
                 title: el.title,
@@ -48,10 +41,11 @@ class Home extends React.Component<HomeProps, {}> {
     }
 }
 
+
 export default connect(
     (state: ApplicationState) => state,
     { loadData: HomeStore.actionCreators.loadData, 
         login: actionCreators.login, 
         selectTask: HomeStore.actionCreators.selectTask,
-    addTask :  HomeStore.actionCreators.addTask}
+        addTask :  Project.actionCreators.addTask}
 )(Home) as typeof Home;

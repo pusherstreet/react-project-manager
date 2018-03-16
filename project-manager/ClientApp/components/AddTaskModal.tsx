@@ -2,7 +2,7 @@ import * as React from 'React';
 import {Modal, Button, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import { ApplicationState } from '../store';
-import {actionCreators} from '../store/Home';
+import {actionCreators} from '../store/Project';
 import * as DateHelper from '../helpers/dateHelper';
 import DateTime from './DateTime';
 

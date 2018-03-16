@@ -28,7 +28,7 @@ export default class NavMenu extends React.Component<any, {}> {
                             <div className="navbar-title">Projects</div>
                             {
                                 this.props.projects.map((el: any, key:number) => {
-                                    return <div key={key} onClick={() => {this.props.setCurrentProject(el)}} className={"project-link " + (this.props.currentProject.projectID == el.projectID ? "active-project": "")}>
+                                    return <div key={key} onClick={() => {this.props.setCurrentProject(el)}} className={"project-link " + (this.props.currentProject && this.props.currentProject.projectID == el.projectID ? "active-project": "")}>
                                         <span className='glyphicon glyphicon-star'></span> {el.title}
                                     </div>
                                 })

@@ -74,6 +74,8 @@ namespace project_manager.Controllers
                 task.UserID = user.UserID;
                 task.TaskID = db.Tasks.Count() + 1;
                 task.ProjectID = projectid;
+                task.Status = db.Statuses.Find(task.StatusID);
+
                 db.Add(task);
                 db.SaveChanges();
                 return task;

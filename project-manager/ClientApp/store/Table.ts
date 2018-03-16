@@ -4,16 +4,19 @@ import { AppThunkAction } from './';
 import callApi from '../helpers/callApi';
 
 export interface TableState{
-    tableTasks: any[]
+    tableTasks: any[],
+    fetchedProject: number| null
 }
 
 interface LoadTableTasks{
     type: "LOAD_TABLE_TASKS",
-    payload: any[]
+    payload: any[],
+    fetchedProject: number
 }
 
 const initialState = {
-    tableTasks: []
+    tableTasks: [],
+    fetchedProject: null
 }
 
 const loadTasks = (): AppThunkAction<LoadTableTasks> => (dispatch: any, getState: Function) => {
@@ -22,7 +25,7 @@ const loadTasks = (): AppThunkAction<LoadTableTasks> => (dispatch: any, getState
     callApi(`api/Tasks/list/${projectID}`)
     .then(response => response.json())
     .then(data => {
-        dispatch({type: "LOAD_TABLE_TASKS", payload: data})
+        dispatch({type: "LOAD_TABLE_TASKS", payload: data, fetchedProject: projectID})
     })
 }
 
@@ -36,7 +39,7 @@ export const reducer: Reducer<TableState> = (state: TableState = initialState, i
     const action = incomingAction as KnownAction;
     switch(action.type){
         case "LOAD_TABLE_TASKS":
-            return {...state, tableTasks: action.payload}
+            return {...state, tableTasks: action.payload, fetchedProject: action.fetchedProject}
         default:
             return state;
     }

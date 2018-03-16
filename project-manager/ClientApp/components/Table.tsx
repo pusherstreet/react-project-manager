@@ -3,13 +3,11 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import * as TableStore from '../store/Table';
+import {ProjectState} from '../store/Project';
 
-type TableProps = TableStore.TableState & RouteComponentProps<{}> & typeof TableStore.actionCreators 
+type TableProps = ApplicationState & TableStore.TableState & ProjectState & RouteComponentProps<{}> & typeof TableStore.actionCreators 
 
 class Table extends React.Component<TableProps, {}>{
-    componentWillMount(){
-        this.props.loadTableTasks();
-    }
     render(){
         return <div>
             <h1>Table</h1>
@@ -26,7 +24,7 @@ class Table extends React.Component<TableProps, {}>{
             </thead>
             <tbody>
             {
-                this.props.tableTasks.map(t => {
+                this.props.project.tasks.map(t => {
                                 return <tr key={t.taskID}> 
                                     <td>{t.title}</td>
                                     <td>{new Date(t.start).toDateString()}</td>
@@ -43,6 +41,6 @@ class Table extends React.Component<TableProps, {}>{
     }
 }
 export default connect(
-    (state: ApplicationState) => state.table,
+    (state: ApplicationState) => state,
     TableStore.actionCreators
 )(Table) as typeof Table;
