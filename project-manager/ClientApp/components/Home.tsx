@@ -18,6 +18,9 @@ type HomeProps = ApplicationState & typeof HomeStore.actionCreators & typeof act
 BigCalendar.momentLocalizer(moment);
 
 class Home extends React.Component<HomeProps, {}> {
+    componentWillMount(){
+        this.props.loadData();
+    }
     public render() {
         let tasks = this.props.project.tasks.map(el => {
             return {

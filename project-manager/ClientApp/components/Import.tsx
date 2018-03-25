@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import * as ImportStore from '../store/Import';
+import {ImportStatus} from '../store/Import';
 
 type ImportProps = RouteComponentProps<{}> & ImportStore.ImportState & typeof ImportStore.actionCreators;
 
@@ -14,22 +15,24 @@ class Import extends React.Component<ImportProps, {}>{
     render(){
         return <div>
             <h2>Import</h2>
-            {
-                this.props.googleLoaded ?
-                <div>
-                    <h4>Imported events:</h4>
-                    <ul>
-                        {
-                            this.props.events.map((el, index) => {
-                                return <li key={index}>{el.Summary},&nbsp;&nbsp;&nbsp;
-                                {el.ID}</li>
-                            })
-                        }
-                    </ul>
-
-                </div> :
                 <button className= "btn btn-info" onClick={() => {this.props.loadGoogleTasks()}}>Google Import</button>
-            }
+                {
+                    this.props.events.length ? (<div>
+                        <h3>Loaded google events</h3>
+                        {this.props.events.map(event => {
+                            return <p>{event.Summary}</p>
+                        })}
+                    </div>) : <div></div>
+                }
+                {
+                    this.props.importResult &&(
+                        <div>
+                            <h3>Import result</h3>
+                            <p>Added: {this.props.importResult.added}</p>
+                            <p>Updated: {this.props.importResult.updated}</p>
+                        </div>
+                    )
+                }            
         </div>
     }
 }

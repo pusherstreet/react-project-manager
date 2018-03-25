@@ -6,18 +6,30 @@ import {GoogleImport} from '../helpers/import';
 import {GoogleEvent, GoogleUser} from '../models/index';
 
 export interface ImportState{
-    googleLoaded: boolean;
-    events: GoogleEvent[]
+    status: ImportStatus;
+    events: GoogleEvent[];
+    importResult: any;
+}
+export enum ImportStatus{
+    init,
+    googleloaded,
+    imported
 }
 
 const initialState: ImportState = {
-    googleLoaded: false,
-    events: []
+    status: ImportStatus.init,
+    events: [],
+    importResult: null
 }
 
+// actions
 interface LoadGoogleTasks{
     type: "LOAD_GOOGLE_EVENTS",
     payload: GoogleEvent[]
+}
+interface ReceiveImportResult{
+    type: "RECEIVE_IMPORT_RESULT",
+    payload: any
 }
 
 let googleClient = new GoogleImport();
@@ -38,7 +50,6 @@ const loadGoogleTasks = (): AppThunkAction<LoadGoogleTasks> => (dispatch: any, g
             };
             return gevent;
         })
-        console.log(gevents);
         const requestData = {
             method: 'POST',
             body: JSON.stringify(gevents),
@@ -46,10 +57,15 @@ const loadGoogleTasks = (): AppThunkAction<LoadGoogleTasks> => (dispatch: any, g
                 'Content-Type': 'application/json;'
             }
         };
-
-        callApi('api/import/gevents', requestData).then(response => {
-            console.log(gevents.length);
+        let project = getState().project.currentProject;
+        callApi(`api/import/gevents${project ? `?projectID=${project.projectID}`: ''}}`, requestData)
+        .then(response => {
             dispatch({type: "LOAD_GOOGLE_EVENTS", payload: gevents});
+            return response.json();
+        })
+        .then(data => {
+            console.log('server');
+            dispatch({type: "RECEIVE_IMPORT_RESULT", payload: data});
         });
     };
     googleClient.signIn();
@@ -61,13 +77,15 @@ export const actionCreators = {
     }
 }
 
-type KnownAction = LoadGoogleTasks;
+type KnownAction = LoadGoogleTasks & ReceiveImportResult;
 
 export const reducer:Reducer<ImportState> = (state: ImportState = initialState, incomingAction: Action) => {
     let action = incomingAction as KnownAction;
     switch(action.type){
         case "LOAD_GOOGLE_EVENTS":
-        return {...state, events: action.payload, googleLoaded : true};
+            return {...state, events: action.payload, status: ImportStatus.googleloaded};
+        case "RECEIVE_IMPORT_RESULT":
+            return {...state, importResult: action.payload, status: ImportStatus.imported }
     }
     return initialState;
 }

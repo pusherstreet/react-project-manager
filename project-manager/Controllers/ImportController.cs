@@ -20,25 +20,40 @@ namespace project_manager.Controllers
         }
         [Route("gevents")]
         [HttpPost]
-        public void ImportGoogleEvents([FromBody]IEnumerable<GoogleEvent> events){
+        public GoogleImportResult ImportGoogleEvents([FromBody]IEnumerable<GoogleEvent> events, int projectid){
             var eventsList = events;
             int count = db.Tasks.Count();
             var userid = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name).UserID;
+            var result = new GoogleImportResult();
             foreach(var e in eventsList){
-                count++;
-                var task = new Task{
-                    TaskID = count,
-                    Title = e.Summary,
-                    Description = "Google event",
-                    Created = e.Created,
-                    StatusID = 1,
-                    UserID = userid,
-                    Start = e.Start == DateTime.MinValue ? e.Created : e.Start,
-                    End = e.End == DateTime.MinValue ? e.Created : e.End
-                };
-                db.Tasks.Add(task);
+                var existTask = db.Tasks.SingleOrDefault(x => x.GoogleID == e.ID);
+                if(existTask == null){
+                    count++;
+                    result.Added++;
+                    var task = new Task{
+                        TaskID = count,
+                        Title = e.Summary,
+                        Description = "Google event",
+                        Created = e.Created,
+                        StatusID = 1,
+                        UserID = userid,
+                        Start = e.Start == DateTime.MinValue ? e.Created : e.Start,
+                        End = e.End == DateTime.MinValue ? e.Created : e.End,
+                        GoogleID = e.ID,
+                        ProjectID = projectid
+                    };
+                    db.Tasks.Add(task);
+                }else{
+                    result.Updated++;
+                    existTask.Title = e.Summary;
+                    existTask.Start = e.Start == DateTime.MinValue ? e.Created : e.Start;
+                    existTask.End = e.End == DateTime.MinValue ? e.Created : e.End;
+                    db.Entry(existTask).State = EntityState.Modified;
+                }
+                
             }
             db.SaveChanges();
+            return result;
         }
     }
 }
