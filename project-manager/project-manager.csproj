@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0"/>
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.32.2.1132"/>
     <PackageReference Include="Google.Apis.Auth.Mvc" Version="1.32.2"/>
+    <PackageReference Include="EPPlus.Core" Version="1.5.4"/>
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0"/>

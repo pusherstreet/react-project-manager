@@ -19,7 +19,7 @@ const initialState: GanttState = {
 }
 
 interface LoadTasks{
-    type: "LOAD_TASKS",
+    type: "LOAD_GANTT_TASKS",
     payload: {
         data: any[],
         links: any[]
@@ -30,7 +30,7 @@ const loadTasks = (): AppThunkAction<LoadTasks> => (dispatch: any, getState: Fun
     callApi('api/Tasks/gantt')
     .then(response => response.json())
     .then(data => {
-        dispatch({type: "LOAD_TASKS", payload: data})
+        dispatch({type: "LOAD_GANTT_TASKS", payload: data})
     })
 }
 
@@ -68,7 +68,7 @@ type KnownAction = LoadTasks;
 export const reducer: Reducer<GanttState> = (state: GanttState = initialState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
     switch(action.type){
-        case 'LOAD_TASKS':
+        case 'LOAD_GANTT_TASKS':
         console.log(action.payload);
             return {...state, tasks: action.payload }
         default:

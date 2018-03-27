@@ -11,7 +11,7 @@ namespace project_manager.Controllers
 {
     [Produces("application/json")]
     [Route("api/import")]
-    
+    [Authorize]
     public class ImportController : BaseController
     {
         public ImportController(Context context): base(context)

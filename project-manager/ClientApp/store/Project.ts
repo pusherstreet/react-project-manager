@@ -40,12 +40,12 @@ interface LoadTasks{
 
 export const actionCreators = {
     loadTasks:  (): AppThunkAction<LoadTasks> => (dispatch: any, getState: Function) => {
-        console.log(getState);
         let project = getState().project.currentProject;
         if(project){
             callApi(`api/tasks/list/${project.projectID}`)
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data);
                     dispatch({type: 'LOAD_TASKS', tasks: data});
                 });
         }
