@@ -49,22 +49,25 @@ const loadGoogleTasks = (): AppThunkAction<LoadGoogleTasks> => (dispatch: any, g
                 Summary: event.summary
             };
             return gevent;
-        })
+        });
+        let project = getState().project.currentProject;
+        const payload = {
+            projectID: project.projectID,
+            events: gevents
+        };
         const requestData = {
             method: 'POST',
-            body: JSON.stringify(gevents),
+            body: JSON.stringify(payload),
             headers: {
                 'Content-Type': 'application/json;'
             }
         };
-        let project = getState().project.currentProject;
-        callApi(`api/import/gevents${project ? `?projectID=${project.projectID}`: ''}}`, requestData)
+        callApi(`api/import/gevents`, requestData)
         .then(response => {
             dispatch({type: "LOAD_GOOGLE_EVENTS", payload: gevents});
             return response.json();
         })
         .then(data => {
-            console.log('server');
             dispatch({type: "RECEIVE_IMPORT_RESULT", payload: data});
         });
     };

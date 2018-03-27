@@ -33,8 +33,23 @@ interface UpdateTask{
     type: "UPDATE_CALENDAR_TASK",
     task: Task
 }
+interface LoadTasks{
+    type: 'LOAD_TASKS',
+    tasks: Task[]
+}
 
 export const actionCreators = {
+    loadTasks:  (): AppThunkAction<LoadTasks> => (dispatch: any, getState: Function) => {
+        console.log(getState);
+        let project = getState().project.currentProject;
+        if(project){
+            callApi(`api/tasks/list/${project.projectID}`)
+                .then(response => response.json())
+                .then(data => {
+                    dispatch({type: 'LOAD_TASKS', tasks: data});
+                });
+        }
+    },
     loadProjects: (): AppThunkAction<LoadProjects> => (dispatch: any, getState: Function) => {
         callApi('api/projects')
         .then(response => response.json())
@@ -98,11 +113,13 @@ export const actionCreators = {
     }
 }
 
-type KnownAction = LoadProjects & CurrentProject & AddTask;
+type KnownAction = LoadProjects & CurrentProject & AddTask & LoadProjects;
 
 export const reducer : Reducer<ProjectState> = (state: ProjectState = initialState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
     switch(action.type){
+        case "LOAD_TASKS":
+            return {...state, tasks: action.tasks}
         case "LOAD_PROJECTS":
             return {...state, projectList: action.payload };
         case "CURRENT_PROJECT_CHANGE":

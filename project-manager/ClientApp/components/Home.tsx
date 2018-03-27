@@ -18,7 +18,7 @@ type HomeProps = ApplicationState & typeof HomeStore.actionCreators & typeof act
 BigCalendar.momentLocalizer(moment);
 
 class Home extends React.Component<HomeProps, {}> {
-    componentWillMount(){
+    componentDidMount(){
         this.props.loadData();
     }
     public render() {
@@ -47,7 +47,7 @@ class Home extends React.Component<HomeProps, {}> {
 
 export default connect(
     (state: ApplicationState) => state,
-    { loadData: HomeStore.actionCreators.loadData, 
+    { loadData: Project.actionCreators.loadTasks, 
         login: actionCreators.login, 
         selectTask: HomeStore.actionCreators.selectTask,
         addTask :  Project.actionCreators.addTask}

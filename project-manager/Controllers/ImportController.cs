@@ -18,10 +18,13 @@ namespace project_manager.Controllers
         {
             db = context;
         }
+
         [Route("gevents")]
         [HttpPost]
-        public GoogleImportResult ImportGoogleEvents([FromBody]IEnumerable<GoogleEvent> events, int projectid){
-            var eventsList = events;
+        public GoogleImportResult ImportGoogleEvents([FromBody]ImportModel model){
+            var eventsList = model.events;
+            int projectID = model.projectID;
+
             int count = db.Tasks.Count();
             var userid = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name).UserID;
             var result = new GoogleImportResult();
@@ -40,7 +43,7 @@ namespace project_manager.Controllers
                         Start = e.Start == DateTime.MinValue ? e.Created : e.Start,
                         End = e.End == DateTime.MinValue ? e.Created : e.End,
                         GoogleID = e.ID,
-                        ProjectID = projectid
+                        ProjectID = projectID
                     };
                     db.Tasks.Add(task);
                 }else{
@@ -55,5 +58,9 @@ namespace project_manager.Controllers
             db.SaveChanges();
             return result;
         }
+    }
+    public class ImportModel{
+        public int projectID {get; set;}
+        public IEnumerable<GoogleEvent> events {get; set;}
     }
 }
