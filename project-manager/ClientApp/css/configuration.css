@@ -1,0 +1,15 @@
+
+.configuration-list{
+    padding: 0px;
+}
+.configuration-list li{
+    list-style: none;
+    padding: 11px 0px;
+    border-bottom: 1px outset;
+}
+.configuration-title{
+    font-size: 16px;
+}
+.configuration-value{
+    float: right;
+}
