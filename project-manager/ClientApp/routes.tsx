@@ -8,6 +8,7 @@ import GanttComponent from './components/GanttComponent';
 import Table from './components/Table';
 import Import from './components/Import';
 import Export from './components/Export'
+import Configuration from './components/Configuration';
 
 
 export const routes = <Layout>
@@ -17,4 +18,5 @@ export const routes = <Layout>
     <Route exact path='/table' component={Table} />
     <Route exact path='/import' component={Import} />
     <Route exact path='/export' component={Export} />
+    <Route exact path='/configuration' component={Configuration} />
 </Layout>;
