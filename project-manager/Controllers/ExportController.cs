@@ -13,14 +13,13 @@ using OfficeOpenXml.Style;
 namespace project_manager.Controllers
 {
     [Route("api/export")]
-    [Authorize]
     public class ExportController: Controller {
         private Context db;
         public ExportController(Context _db){
             db = _db;
         }
-        [Route("xlxs/{projectID}")]
-        public byte[] ExportCsv(int projectID){
+        [Route("xlsx/{projectID}")]
+        public void ExportCsv(int projectID){
             var tasks = db.Tasks.Include(x => x.Status).Where(x => x.ProjectID == projectID);
             using(var excel = new ExcelPackage()){
                 var worksheet = excel.Workbook.Worksheets.Add("Tasks Report");
@@ -36,7 +35,8 @@ namespace project_manager.Controllers
                 }
                 using(var stream = new MemoryStream()){
                     excel.SaveAs(stream);
-                    return stream.ToArray();
+                    byte[] array = stream.ToArray();
+                    Response.Body.WriteAsync(array, 0, array.Length);
                 }
             }
         }

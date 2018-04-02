@@ -9,13 +9,13 @@ type ImportProps = RouteComponentProps<{}> & ImportStore.ImportState & typeof Im
 
 class Import extends React.Component<ImportProps, {}>{
     componentWillMount(){
-        console.log('mount');
         this.props.init();
     }
     render(){
         return <div>
             <h2>Import</h2>
-                <button className= "btn btn-info" onClick={() => {this.props.loadGoogleTasks()}}>Google Import</button>
+                <h4>Import events from google calendar.</h4>
+                <button className= "btn btn-info" onClick={() => {this.props.loadGoogleTasks()}}>Import</button>
                 {
                     this.props.events.length ? (<div>
                         <h3>Loaded google events</h3>
