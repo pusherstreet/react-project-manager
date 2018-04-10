@@ -11,11 +11,18 @@ class Import extends React.Component<ImportProps, {}>{
     componentWillMount(){
         this.props.init();
     }
+    handeChange = (e: any) => {
+        const target = e.target as HTMLInputElement;
+        const file = target.files[0];
+        this.props.importExcel(file);
+    }
     render(){
         return <div>
             <h2>Import</h2>
-                <h4>Import events from google calendar.</h4>
-                <button className= "btn btn-info" onClick={() => {this.props.loadGoogleTasks()}}>Import</button>
+                <button className= "btn btn-info" onClick={() => {this.props.loadGoogleTasks()}}>Google Calendar</button>
+                <span style={{marginLeft: '15px'}} className="btn btn-success btn-file">
+                    Excel <input onChange={this.handeChange} type="file" />
+                </span>
                 {
                     this.props.events.length ? (<div>
                         <h3>Loaded google events</h3>

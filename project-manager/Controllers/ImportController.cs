@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using project_manager.Models;
 using Microsoft.AspNetCore.Authorization;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.IO;
 
 namespace project_manager.Controllers
 {
@@ -21,13 +24,13 @@ namespace project_manager.Controllers
 
         [Route("gevents")]
         [HttpPost]
-        public GoogleImportResult ImportGoogleEvents([FromBody]ImportModel model){
+        public ImportResult ImportGoogleEvents([FromBody]GoogleImportModel model){
             var eventsList = model.events;
             int projectID = model.projectID;
 
             int count = db.Tasks.Count();
             var userid = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name).UserID;
-            var result = new GoogleImportResult();
+            var result = new ImportResult();
             foreach(var e in eventsList){
                 var existTask = db.Tasks.SingleOrDefault(x => x.GoogleID == e.ID);
                 if(existTask == null){
@@ -58,8 +61,18 @@ namespace project_manager.Controllers
             db.SaveChanges();
             return result;
         }
+        [Route("excel/{projectID}")]
+        [HttpPost]
+        public ImportResult ExcelImport([FromForm]IFormFile file, int projectID){
+            using(var stream = file.OpenReadStream()){
+                using(var excel = new ExcelPackage(stream)){
+
+                }
+            }
+            return null;
+        }
     }
-    public class ImportModel{
+    public class GoogleImportModel{
         public int projectID {get; set;}
         public IEnumerable<GoogleEvent> events {get; set;}
     }

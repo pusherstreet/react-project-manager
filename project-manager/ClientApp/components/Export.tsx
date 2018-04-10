@@ -10,8 +10,7 @@ class Export extends React.Component<ExportState,{}>{
     render(){
         return <div>
             <h2>Export</h2>
-            <h4>Export project tasks as in excel format.</h4>
-            <button onClick={() => {this.props.exportTasks()}} className= "btn btn-info">Export</button>
+            <button onClick={() => {this.props.exportTasks()}} className= "btn btn-success">Excel</button>
         </div>
     }
 }

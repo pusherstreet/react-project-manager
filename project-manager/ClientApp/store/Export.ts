@@ -32,7 +32,6 @@ export const actionCreators = {
             .then(response => response.arrayBuffer())
             .then(data => {
                 const uint8 = new Uint8Array(data);
-                console.log(uint8);
                 downloadFile(uint8);
             })
         }

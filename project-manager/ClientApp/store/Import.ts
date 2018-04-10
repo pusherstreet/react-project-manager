@@ -77,6 +77,20 @@ export const actionCreators = {
     loadGoogleTasks: loadGoogleTasks,
     init: (): AppThunkAction<LoadGoogleTasks> => (dispatch: any, getState: Function) => {
         googleClient.init();
+    },
+    importExcel: (file: File) : AppThunkAction<LoadGoogleTasks> => (dispatch: any, getState: Function) => {
+        let project = getState().project.currentProject;
+        if(project){
+            const payload = file;
+            const requestData = {
+                method: 'POST',
+                body: file
+            }
+            callApi(`api/import/excel/${project.projectID}`, requestData)
+            .then(response => {
+                console.log(response);
+            })
+        }
     }
 }
 
