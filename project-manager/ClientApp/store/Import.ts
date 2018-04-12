@@ -81,14 +81,18 @@ export const actionCreators = {
     importExcel: (file: File) : AppThunkAction<LoadGoogleTasks> => (dispatch: any, getState: Function) => {
         let project = getState().project.currentProject;
         if(project){
-            const payload = file;
+            const formData = new FormData();
+            formData.append('name', 'import.xlsx');
+            formData.append('file', file);
+            const payload = formData;
             const requestData = {
                 method: 'POST',
-                body: file
+                body: formData
             }
             callApi(`api/import/excel/${project.projectID}`, requestData)
-            .then(response => {
-                console.log(response);
+            .then(response => response.json())
+            .then(data => {
+                dispatch({type: "RECEIVE_IMPORT_RESULT", payload: data});
             })
         }
     }

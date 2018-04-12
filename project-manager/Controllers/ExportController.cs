@@ -28,7 +28,7 @@ namespace project_manager.Controllers
                 worksheet.Cells[1, 3].Value = "Status";
                 worksheet.Cells[1, 4].Value = "Start Date";
                 worksheet.Cells[1, 5].Value = "End Date";
-                worksheet.Cells[1, 6].Value = "Email";
+                worksheet.Cells[1, 6].Value = "Description";
                 worksheet.Row(1).Style.Font.Bold = true;
 
                 int row = 2;
@@ -38,7 +38,7 @@ namespace project_manager.Controllers
                     worksheet.Cells[row, 3].Value = task.Status.Name;
                     worksheet.Cells[row, 4].Value = task.Start.ToString();
                     worksheet.Cells[row, 5].Value = task.End.ToString();
-                    worksheet.Cells[row, 6].Value = task.User.Email;
+                    worksheet.Cells[row, 6].Value = task.Description;
                     row++;
                 }
                 using(var stream = new MemoryStream()){
