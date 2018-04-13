@@ -35,3 +35,13 @@ export interface GoogleUser{
     DisplayName: string;
     Self: boolean;
 }
+
+export enum Theme{
+    Light,
+    Dark
+}
+
+export interface Configuration{
+    Theme: Theme,
+    Notifications: boolean
+}

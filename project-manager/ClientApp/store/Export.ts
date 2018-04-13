@@ -38,7 +38,15 @@ export const actionCreators = {
     }
 }
 
+type KnownAction = StartExport & EndExport;
 
 export const reducer:Reducer<ExportState> = (state: ExportState = initialState, incomingAction: Action) => {
+    const action = incomingAction as KnownAction;
+    switch(action.type){
+        case "START_EXPORT":
+            return {...state, disableExportButton: true };
+        case "END_EXPORT":
+            return {...state, disableExportButton: false}
+    }
     return initialState;
 }

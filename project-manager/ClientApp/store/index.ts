@@ -6,6 +6,7 @@ import * as Table from './Table';
 import * as Import from './Import';
 import * as Project from './Project';
 import * as Export from './Export';
+import * as Configuration from './Configuration';
 
 // The top-level state object
 export interface ApplicationState {
@@ -17,6 +18,7 @@ export interface ApplicationState {
     import: Import.ImportState;
     project: Project.ProjectState;
     export: Export.ExportState;
+    configuration: Configuration.configurationState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -30,7 +32,8 @@ export const reducers = {
     table: Table.reducer,
     import: Import.reducer,
     project: Project.reducer,
-    export: Export.reducer
+    export: Export.reducer,
+    configuration: Configuration.reducer
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are
