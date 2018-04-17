@@ -13,9 +13,8 @@ using OfficeOpenXml.Style;
 namespace project_manager.Controllers
 {
     [Route("api/export")]
-    public class ExportController: Controller {
-        private Context db;
-        public ExportController(Context _db){
+    public class ExportController: BaseController {
+        public ExportController(Context _db): base(_db){
             db = _db;
         }
         [Route("xlsx/{projectID}")]

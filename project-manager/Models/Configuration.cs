@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace project_manager.Models
 {
-    public class Configuration{
+    public class Configuration : IUserData{
         public int ConfigurationID {get; set;}
-        public int UserID {get; set;}
+        public Guid UserID {get; set;}
         public User User {get; set;}
-        public string CurrentTheme {get; set;}
+        public string Theme {get; set;}
+        public bool Notifications {get; set;}
     }
 }

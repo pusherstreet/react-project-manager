@@ -36,12 +36,9 @@ export interface GoogleUser{
     Self: boolean;
 }
 
-export enum Theme{
-    Light,
-    Dark
-}
-
 export interface Configuration{
-    Theme: Theme,
+    UserID: string,
+    ConfigurationID: number,
+    Theme: string,
     Notifications: boolean
 }

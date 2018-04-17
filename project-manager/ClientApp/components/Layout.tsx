@@ -4,12 +4,16 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import * as AuthStore from '../store/Auth';
 import * as ProjectStore from '../store/Project';
+import * as ConfigurationStore from '../store/Configuration';
 import LoginForm from './LoginForm';
+import '../css/site.css';
 
 class Layout extends React.Component<any, {}> {
     public render() {
-        return <div className='container-fluid'>
-            <div className='row'>
+            console.log(this.props.configuration);
+            const theme = this.props.configuration.configurationLoaded ? this.props.configuration.configuration.Theme + 'Theme' : ''; 
+            return <div className='container-fluid'>
+            <div className={`row app-container ${theme}`}>
                 <div className='col-sm-3'>
                     <NavMenu 
                     isAuth={this.props.auth.isAuth} 
@@ -28,7 +32,7 @@ class Layout extends React.Component<any, {}> {
             </div>
             <LoginForm />
         </div>;
-    }
+        }
 }
 export default connect(
     (state: ApplicationState) => state,
@@ -36,6 +40,7 @@ export default connect(
         login: AuthStore.actionCreators.login,
         logoff: AuthStore.actionCreators.logoff,
         loadProjects: ProjectStore.actionCreators.loadProjects,
-        setCurrentProject: ProjectStore.actionCreators.setCurrentProject
+        setCurrentProject: ProjectStore.actionCreators.setCurrentProject,
+        load: ConfigurationStore.actionCreators.load
     }
 )(Layout) as typeof Layout;

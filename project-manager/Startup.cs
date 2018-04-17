@@ -171,6 +171,14 @@ namespace project_manager
                     ProjectID = 2
                 }
             );
+            db.Configurations.Add(
+                new Configuration{
+                    ConfigurationID = 1,
+                    UserID = guid,
+                    Theme = "Light",
+                    Notifications = false
+                }
+            );
             db.SaveChanges();
         }
     }
