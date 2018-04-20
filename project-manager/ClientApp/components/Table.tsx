@@ -14,7 +14,7 @@ class Table extends React.Component<TableProps, {}>{
     render(){
         return <div>
             <h1>Table</h1>
-            <table className="table table-bordered">
+            <table className="table table-bordered tasksList">
             <thead style={{backgroundColor: "#e3e3e3"}}>
                 <tr>
                     <th>Title</th>
@@ -28,7 +28,7 @@ class Table extends React.Component<TableProps, {}>{
             <tbody>
             {
                 this.props.project.tasks.map(t => {
-                                return <tr key={t.taskID}> 
+                                return <tr onClick={() => {this.props.goToTask(t.taskID)}} key={t.taskID}> 
                                     <td>{t.title}</td>
                                     <td>{new Date(t.start).toDateString()}</td>
                                     <td>1</td>
@@ -46,6 +46,7 @@ class Table extends React.Component<TableProps, {}>{
 export default connect(
     (state: ApplicationState) => state,
     {
-        loadTableTasks: actionCreators.loadTasks
+        loadTableTasks: actionCreators.loadTasks,
+        goToTask: TableStore.actionCreators.goToTask
     }
 )(Table) as typeof Table;

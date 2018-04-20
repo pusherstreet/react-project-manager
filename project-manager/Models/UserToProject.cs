@@ -9,6 +9,8 @@ namespace project_manager.Models
     {
         public int UserToProjectID{ get; set; }
         public Guid UserID { get; set; }
+        public User User {get; set;}
         public int ProjectID { get; set; }
+        public Project Project {get; set;}
     }
 }

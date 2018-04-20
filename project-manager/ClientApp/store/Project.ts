@@ -2,18 +2,20 @@ import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from './';
 import callApi from '../helpers/callApi';
-import { Task } from '../models';
+import { Task, User } from '../models';
 
 export interface ProjectState{
     projectList: any[];
     currentProject: any;
-    tasks: Task[]
+    tasks: Task[],
+    users: User[]
 }
 
 export const initialState : ProjectState = {
     projectList: [],
     currentProject: null,
     tasks: [],
+    users: []
 }
 
 interface LoadProjects{
@@ -24,6 +26,7 @@ interface CurrentProject{
     type: "CURRENT_PROJECT_CHANGE";
     project: any;
     tasks: Task[];
+    users: User[];
 }
 interface AddTask{
     type: "ADD_TASK",
@@ -60,17 +63,27 @@ export const actionCreators = {
                 callApi(`api/tasks/list/${project.projectID}`)
                 .then(response => response.json())
                 .then(tasks => {
-                dispatch({type: 'CURRENT_PROJECT_CHANGE', project: project, tasks: tasks}); 
+                    callApi(`api/projects/users/${project.projectID}`)
+                    .then(response => response.json())
+                    .then(users => {
+                        dispatch({type: "CURRENT_PROJECT_CHANGE", project: project, tasks: tasks, users: users});
+                    })
             });
             }
         });
     },
+    // callback hell, should be async/await soon
     setCurrentProject: (project: any): AppThunkAction<CurrentProject> => (dispatch: any, getState: Function) => {
         if(getState().project.currentProject.projectID !== project.projectID){
             callApi(`api/tasks/list/${project.projectID}`)
             .then(response => response.json())
             .then(data => {
-                dispatch({type: "CURRENT_PROJECT_CHANGE", project: project, tasks: data});
+                const tasks = data;
+                callApi(`api/projects/users/${project.projectID}`)
+                .then(response => response.json())
+                .then(users => {
+                    dispatch({type: "CURRENT_PROJECT_CHANGE", project: project, tasks: tasks, users: users});
+                })
             });
         }
     },
@@ -123,8 +136,8 @@ export const reducer : Reducer<ProjectState> = (state: ProjectState = initialSta
         case "LOAD_PROJECTS":
             return {...state, projectList: action.payload };
         case "CURRENT_PROJECT_CHANGE":
-            return {...state, currentProject: action.project, tasks: action.tasks};
-            case 'ADD_TASK':
+            return {...state, currentProject: action.project, tasks: action.tasks, users: action.users};
+        case 'ADD_TASK':
             let newArray = state.tasks.slice();
             newArray.push(action.task);
             return {...state, tasks: newArray};

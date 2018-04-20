@@ -9,8 +9,10 @@ import LoginForm from './LoginForm';
 import '../css/site.css';
 
 class Layout extends React.Component<any, {}> {
+    componentDidMount() {
+        this.props.load();
+    }
     public render() {
-            console.log(this.props.configuration);
             const theme = this.props.configuration.configurationLoaded ? this.props.configuration.configuration.Theme + 'Theme' : ''; 
             return <div className='container-fluid'>
             <div className={`row app-container ${theme}`}>

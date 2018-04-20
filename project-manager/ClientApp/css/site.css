@@ -113,3 +113,8 @@
 .hNTmYK{
     background-color: inherit!important;
 }
+.table.tasksList tbody tr:hover{
+    background-color: #4189C7;
+    color: white;
+    cursor: pointer;
+}

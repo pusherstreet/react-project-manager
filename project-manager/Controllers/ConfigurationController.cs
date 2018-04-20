@@ -11,6 +11,7 @@ namespace project_manager.Controllers
 {
     [Produces("application/json")]
     [Route("api/configuration")]
+    [Authorize]
     public class ConfigurationController : BaseController{
         public ConfigurationController(Context _db): base(_db){
             db = _db;

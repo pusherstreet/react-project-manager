@@ -108,6 +108,12 @@ namespace project_manager
                 Password = "123",
                 UserID = guid,
             });
+            var guid1 = Guid.NewGuid();
+            db.Users.Add(new User(){
+                Email = "another@mail.com",
+                Password = "321",
+                UserID = guid1
+            });
             db.Statuses.AddRange(new Status[]{
                 new Status { StatusID = 1, Name = "Done"},
                 new Status {StatusID = 2, Name = "Created"},
@@ -169,6 +175,13 @@ namespace project_manager
                     UserToProjectID = 2,
                     UserID = guid,
                     ProjectID = 2
+                }
+            );
+             db.UserToProjects.Add(
+                new UserToProject{
+                    UserToProjectID = 3,
+                    UserID = guid1,
+                    ProjectID = 1
                 }
             );
             db.Configurations.Add(

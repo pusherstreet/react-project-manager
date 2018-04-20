@@ -42,3 +42,7 @@ export interface Configuration{
     Theme: string,
     Notifications: boolean
 }
+export interface User{
+    UserID: string,
+    Email: string
+}

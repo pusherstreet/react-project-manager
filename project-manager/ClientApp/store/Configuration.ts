@@ -2,10 +2,10 @@ import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from './';
 import callApi from '../helpers/callApi';
-import {Configuration} from '../models/index';
+import { Configuration } from '../models/index';
 import { FormEvent } from 'react';
 
-export interface configurationState{
+export interface configurationState {
     configurationLoaded: boolean,
     configuration: Configuration | null,
     changed: boolean
@@ -17,34 +17,40 @@ const initialState: configurationState = {
     changed: false
 }
 
-interface LoadConfiguration{
+interface LoadConfiguration {
     type: "LOAD_CONFIGURATION_DATA",
     payload: Configuration
 }
-interface ChangeTheme{
+interface ChangeTheme {
     type: "CHANGE_THEME",
     theme: string
 }
+interface SwitchNotifications {
+    type: "SWITCH_NOTIFICATIONS"
+}
 
-const load = () : AppThunkAction<LoadConfiguration> => (dispatch: any, getState: Function) => {
+const load = (): AppThunkAction<LoadConfiguration> => (dispatch: any, getState: Function) => {
     callApi('api/configuration')
-    .then(response => response.json())
-    .then(data => {
-        const payload:Configuration = {
-            Theme: data.theme,
-            Notifications: data.notifications,
-            ConfigurationID : data.configurationID,
-            UserID: data.userID
-        };
-        dispatch({type: "LOAD_CONFIGURATION_DATA", payload: payload});
-    })
+        .then(response => response.json())
+        .then(data => {
+            const payload: Configuration = {
+                Theme: data.theme,
+                Notifications: data.notifications,
+                ConfigurationID: data.configurationID,
+                UserID: data.userID
+            };
+            dispatch({ type: "LOAD_CONFIGURATION_DATA", payload: payload });
+        })
 }
 export const actionCreators = {
-    load : load,
-    changeTheme : (theme: string) => (dispatch: any) => {
-        dispatch({type: 'CHANGE_THEME', theme: theme});
+    load: load,
+    changeTheme: (theme: string) => (dispatch: any) => {
+        dispatch({ type: 'CHANGE_THEME', theme: theme });
     },
-    saveConfiguration: (configuration: Configuration) : AppThunkAction<LoadConfiguration> => (dispatch: any, getState: Function) =>{
+    switchNotifications: () => (dispatch: any) => {
+        dispatch({ type: "SWITCH_NOTIFICATIONS" });
+    },
+    saveConfiguration: (configuration: Configuration): AppThunkAction<LoadConfiguration> => (dispatch: any, getState: Function) => {
         const requestData = {
             method: 'PUT',
             body: JSON.stringify(configuration),
@@ -53,23 +59,36 @@ export const actionCreators = {
             }
         }
         callApi('api/configuration', requestData)
-        .then(response => {
-            load();
-        })
+            .then(response => {
+                callApi('api/configuration')
+                    .then(response => response.json())
+                    .then(data => {
+                        const payload: Configuration = {
+                            Theme: data.theme,
+                            Notifications: data.notifications,
+                            ConfigurationID: data.configurationID,
+                            UserID: data.userID
+                        };
+                        dispatch({ type: "LOAD_CONFIGURATION_DATA", payload: payload });
+                    })
+            })
     }
 }
 
-type KnownAction = LoadConfiguration & ChangeTheme;
+type KnownAction = LoadConfiguration & ChangeTheme & SwitchNotifications;
 
-export const reducer:Reducer<configurationState> = (state: configurationState = initialState, incomingAction: Action) => {
+export const reducer: Reducer<configurationState> = (state: configurationState = initialState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
-    switch(action.type){
+    let configuration = { ...state.configuration };
+    switch (action.type) {
         case "LOAD_CONFIGURATION_DATA":
-            return {...state, configurationLoaded: true, configuration: action.payload, changed: false};
+            return { ...state, configurationLoaded: true, configuration: action.payload, changed: false };
         case "CHANGE_THEME":
-            let configuration = {...state.configuration};
             configuration.Theme = action.theme;
-            return {...state, configuration: configuration, changed: true}          
+            return { ...state, configuration: configuration, changed: true };
+        case "SWITCH_NOTIFICATIONS":
+            configuration.Notifications = !state.configuration.Notifications;
+            return { ...state, configuration: configuration, changed: true }
     }
     return state;
 }

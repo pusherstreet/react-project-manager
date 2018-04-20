@@ -2,6 +2,8 @@ import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from './';
 import callApi from '../helpers/callApi';
+import { push } from 'react-router-redux';
+import { store } from '../boot-client';
 
 export interface TableState{
     tableTasks: any[],
@@ -30,7 +32,10 @@ const loadTasks = (): AppThunkAction<LoadTableTasks> => (dispatch: any, getState
 }
 
 export const actionCreators = {
-    loadTableTasks: loadTasks
+    loadTableTasks: loadTasks,
+    goToTask: (id: number) => (dispatch: Function) => {
+        store.dispatch(push('/tasks/' + id));
+    } 
 }
 
 type KnownAction = LoadTableTasks;
