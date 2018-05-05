@@ -3,6 +3,8 @@ import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from './';
 import callApi from '../helpers/callApi';
 import { Task, User } from '../models';
+import { push } from 'react-router-redux';
+import { store } from '../boot-client';
 
 export interface ProjectState{
     projectList: any[];
@@ -85,6 +87,9 @@ export const actionCreators = {
                     dispatch({type: "CURRENT_PROJECT_CHANGE", project: project, tasks: tasks, users: users});
                 })
             });
+            // we need to full reload when change current project
+            if(getState().routing.location.pathname !== '/')
+                store.dispatch(push('/'));
         }
     },
     updateTask: (task: Task): AppThunkAction<any> => (dispatch: any, getState: Function) => {

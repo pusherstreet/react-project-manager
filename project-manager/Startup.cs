@@ -131,7 +131,8 @@ namespace project_manager
                 UserID = guid,
                 StatusID = 1,
                 Status = new Status { StatusID = 1, Name = "Done"},
-                ProjectID = 1
+                ProjectID = 1,
+                Effort = 10
             });
             db.Tasks.Add(new project_manager.Models.Task(){
                 TaskID = 2,
@@ -143,7 +144,8 @@ namespace project_manager
                 UserID = guid,
                 StatusID = 2,
                 Status = new Status { StatusID = 1, Name = "Done"},
-                ProjectID = 2
+                ProjectID = 2,
+                Effort = 3
             });
             db.Projects.Add(
                 new Project{

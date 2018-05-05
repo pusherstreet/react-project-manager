@@ -59,7 +59,7 @@ namespace project_manager.Controllers
         [HttpGet("{id}", Name = "Get")]
         public Task Get(int id)
         {
-            return db.Tasks.Find(id);
+            return db.Tasks.Include(x => x.User).FirstOrDefault(x => x.TaskID == id);
         }
         
         // POST: api/Tasks

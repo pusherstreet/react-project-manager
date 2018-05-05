@@ -118,3 +118,23 @@
     color: white;
     cursor: pointer;
 }
+.task-edit td{
+    border-top: 0!important;
+}
+.save-message{
+    position: fixed;
+    top: 5px;
+    right: 5px;
+    background: #5cb85c;
+    padding: 15px 40px;
+    color: white;
+    font-weight: bold;
+    border-radius: 2px;
+}
+.hide{
+    display: none;
+}
+.comment-block button{
+    float: right;
+    margin-top: 5px;
+}

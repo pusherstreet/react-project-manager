@@ -7,6 +7,9 @@ export interface Task {
     end: Date;
     statusID: number;
     status: any;
+    User: User,
+    UserID: string,
+    effort: number
 }
 
 export interface Status{
@@ -43,6 +46,6 @@ export interface Configuration{
     Notifications: boolean
 }
 export interface User{
-    UserID: string,
-    Email: string
+    userID: string,
+    email: string
 }

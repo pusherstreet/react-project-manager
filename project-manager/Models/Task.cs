@@ -24,5 +24,6 @@ namespace project_manager.Models
         public Project Project { get; set; }
         public decimal Progress { get; set; }
         public string GoogleID {get; set;}
+        public int Effort {get; set;}
     }
 }
