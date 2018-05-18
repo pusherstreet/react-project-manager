@@ -56,6 +56,10 @@ interface removeChange{
     type: "REMOVE_CHANGE",
     payload: string
 }
+interface addComment{
+    type: "ADD_COMMENT",
+    payload: TaskHistory
+}
 
 export const actionCreators = {
     load : (id: number): AppThunkAction<loadTask> => (dispatch:Function, getState: Function) => {
@@ -138,6 +142,31 @@ export const actionCreators = {
             console.log(history);
             dispatch({type: "LOAD_TASK_HISTORY", payload: history});
         });
+    },
+    addComment: (text: string, taskID: number, userID: string): AppThunkAction<addComment> => (dispatch: Function, getState: Function) => {
+        const payload = {
+            message: text,
+            taskID: taskID,
+            userID: userID,
+            created: new Date()
+        };
+        
+        const requestData = {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+                'Content-Type': 'application/json;'
+            }
+        };
+        callApi('api/history', requestData)
+        .then(response => response.json())
+        .then(data => {
+            const action: addComment = {
+                type: "ADD_COMMENT",
+                payload: data
+            };
+            dispatch(action);
+        });
     }
 }
 
@@ -182,6 +211,9 @@ export const reducer: Reducer<TaskState> = (state: TaskState = initialState, inc
             return {...state, showSaveMessage: false};
         case "LOAD_TASK_HISTORY":
             return {...state, historyList: action.payload};
+        case "ADD_COMMENT":{
+            
+        }
     }
     return state;
 }

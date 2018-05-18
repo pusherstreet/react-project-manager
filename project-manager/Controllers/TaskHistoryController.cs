@@ -23,5 +23,13 @@ namespace project_manager.Controllers
             .Where(x => x.TaskID == taskid);
             return list;
         }
+        [HttpPost]
+        public TaskHistory Post (TaskHistory history){
+
+            db.TaskChages.AddRange(history.Changes);
+            db.TaskHistories.Add(history);
+            db.SaveChanges();
+            return history;
+        }
     }
 }
