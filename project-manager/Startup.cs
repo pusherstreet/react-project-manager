@@ -194,6 +194,13 @@ namespace project_manager
                     Notifications = false
                 }
             );
+            db.TaskHistories.Add(new TaskHistory{
+                TaskHistoryID = 1,
+                TaskID = 1,
+                Created = DateTime.Now,
+                UserID = guid,
+                Message = "Hello, am create this task",
+            });
             db.SaveChanges();
         }
     }

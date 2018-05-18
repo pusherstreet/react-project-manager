@@ -49,3 +49,11 @@ export interface User{
     userID: string,
     email: string
 }
+export interface TaskHistory{
+    taskHistoryID: number,
+    message: string,
+    created: Date,
+    userID: string,
+    user: User,
+    taskID: number
+}

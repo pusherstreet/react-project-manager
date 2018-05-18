@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import * as TaskStore from '../store/Task';
+import HistoryList from './Controls/HistoryList';
 
 type TaskProps = RouteComponentProps<{id:number}> & ApplicationState & typeof TaskStore.actionCreators;
 
@@ -13,6 +14,7 @@ class Task extends React.Component<TaskProps, {comment: string}>{
     }
     componentDidMount(){
         this.props.load(this.props.match.params.id);
+        this.props.loadHistory(this.props.match.params.id);
     }
     componentWillUnmount(){
         if(this.props.task.isChanged){
@@ -88,6 +90,7 @@ class Task extends React.Component<TaskProps, {comment: string}>{
             <textarea name="comment" id="comment" value={this.state.comment} onChange={this.changeComment} className="form-control" rows={4} placeholder="Type your comment here"></textarea>
             <div><button className="btn btn-success">Add comment</button></div>
            </div>
+           <HistoryList historyList={this.props.task.historyList} />
         </div>
     }
 }

@@ -15,6 +15,8 @@ namespace project_manager.Models
         public DbSet<Project> Projects { get; set; }
         public DbSet<UserToProject> UserToProjects { get; set; }
         public DbSet<Configuration> Configurations { get; set;}
+        public DbSet<TaskHistory> TaskHistories {get; set;}
+        public DbSet<TaskChange> TaskChages {get; set;}
 
         public Context(DbContextOptions<Context> options)
             : base(options)

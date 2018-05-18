@@ -25,7 +25,6 @@ export default class AddTaskModal extends React.Component<any, {isShow: boolean,
 
     addTask = () =>{
         this.setState({isShow: false});
-        console.log(this.props);
         this.props.onAdd(this.state.task);
     }
     render(){

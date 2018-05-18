@@ -2,23 +2,29 @@ import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from './';
 import callApi from '../helpers/callApi';
-import { Task } from '../models';
+import { Task, TaskHistory } from '../models';
 
 export interface TaskState {
     currentTask: Task;
     isChanged: boolean;
     showSaveMessage: boolean;
+    historyList: TaskHistory[];
 }
 
 const initialState: TaskState = {
     currentTask: null,
     isChanged: false,
-    showSaveMessage: false
+    showSaveMessage: false,
+    historyList: []
 }
 
 interface loadTask {
     type: 'LOAD_TASK',
     payload: Task
+}
+interface loadHistory{
+    type: 'LOAD_TASK_HISTORY',
+    payload: TaskHistory[]
 }
 interface changeTask{
     type: 'CHANGE_TASK',
@@ -64,10 +70,18 @@ export const actionCreators = {
     },
     hideMsg: (type: string) => (dispatch:Function, getState: Function) => {
         dispatch({type: 'HIDE_MESSAGE', msgType: type});
-    } 
+    },
+    loadHistory: (id: number): AppThunkAction<loadHistory> => (dispatch: Function, getState: Function) =>{
+        callApi(`api/history/${id}`)
+        .then(response => response.json())
+        .then(history => {
+            console.log(history);
+            dispatch({type: "LOAD_TASK_HISTORY", payload: history});
+        });
+    }
 }
 
-type KnownAction = loadTask & changeTask & saveTask & hideMessage;
+type KnownAction = loadTask & changeTask & saveTask & hideMessage & loadHistory;
 
 export const reducer: Reducer<TaskState> = (state: TaskState = initialState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
@@ -82,6 +96,8 @@ export const reducer: Reducer<TaskState> = (state: TaskState = initialState, inc
             return {...state, isChanged: false, showSaveMessage: true};
         case "HIDE_MESSAGE":
             return {...state, showSaveMessage: false};
+        case "LOAD_TASK_HISTORY":
+            return {...state, historyList: action.payload};
     }
     return state;
 }
