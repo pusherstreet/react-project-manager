@@ -5,8 +5,14 @@ export default class HistoryList extends React.Component<{historyList: TaskHisto
     render(){
         return <div>
         {this.props.historyList.map((el: TaskHistory) => {
-            return <div key={el.taskHistoryID}>
-                {el.message}
+            return <div className='history-summary' key={el.taskHistoryID}>
+                <div className="history-text-block">
+                    <b>{el.user.email}:</b> {el.message}
+                </div>
+                <div className="history-info-block">
+                {new Date(el.created).toUTCString()}
+                </div>
+                
             </div>
         })}
         </div>

@@ -141,3 +141,14 @@
 .comment-block{
     margin-bottom: 40px;
 }
+.history-summary{
+    padding: 10px 0px;
+    margin-bottom: 5px;
+    border-radius: 2px;
+}
+.history-text-block{
+    border-bottom: 1px solid gray;
+}
+.history-info-block{
+    padding-left: 10px;
+}

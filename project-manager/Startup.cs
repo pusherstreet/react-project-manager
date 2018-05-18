@@ -199,7 +199,14 @@ namespace project_manager
                 TaskID = 1,
                 Created = DateTime.Now,
                 UserID = guid,
-                Message = "Hello, am create this task",
+                Message = "Hello, am create this task!",
+            });
+            db.TaskHistories.Add(new TaskHistory{
+                TaskHistoryID = 2,
+                TaskID = 1,
+                Created = DateTime.Now,
+                UserID = guid,
+                Message = "Hola",
             });
             db.SaveChanges();
         }

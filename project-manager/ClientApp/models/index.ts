@@ -57,3 +57,9 @@ export interface TaskHistory{
     user: User,
     taskID: number
 }
+export interface TaskChange{
+    fieldName: string,
+    oldValue: any,
+    newValue: any,
+    created: Date
+}

@@ -17,7 +17,10 @@ namespace project_manager.Controllers
         }
         [Route("{taskid}")]
         public IEnumerable<TaskHistory> Get(int taskid){
-            var list = db.TaskHistories.Include(x => x.Changes).Where(x => x.TaskID == taskid);
+            var list = db.TaskHistories
+            .Include(x => x.User)
+            .Include(x => x.Changes)
+            .Where(x => x.TaskID == taskid);
             return list;
         }
     }

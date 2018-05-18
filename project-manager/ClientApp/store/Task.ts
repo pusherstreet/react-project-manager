@@ -2,10 +2,13 @@ import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from './';
 import callApi from '../helpers/callApi';
-import { Task, TaskHistory } from '../models';
+import { Task, TaskHistory, TaskChange } from '../models';
+
 
 export interface TaskState {
     currentTask: Task;
+    taskChanges: TaskChange[]
+    initialTask: Task,
     isChanged: boolean;
     showSaveMessage: boolean;
     historyList: TaskHistory[];
@@ -13,6 +16,8 @@ export interface TaskState {
 
 const initialState: TaskState = {
     currentTask: null,
+    initialTask: null,
+    taskChanges: [],
     isChanged: false,
     showSaveMessage: false,
     historyList: []
@@ -38,6 +43,19 @@ interface hideMessage{
 interface saveTask{
     type: "SAVE_TASK"
 }
+interface insertChange{
+    type: "INSERT_CHANGE",
+    payload: TaskChange
+}
+
+interface updateChange{
+    type: "UPDATE_CHANGE",
+    payload: TaskChange
+}
+interface removeChange{
+    type: "REMOVE_CHANGE",
+    payload: string
+}
 
 export const actionCreators = {
     load : (id: number): AppThunkAction<loadTask> => (dispatch:Function, getState: Function) => {
@@ -48,7 +66,49 @@ export const actionCreators = {
         })
     },
     change: (prop: string, value: any) => (dispatch: Function, getState:Function) => {
-        dispatch({type: "CHANGE_TASK", prop: prop, value: value})
+        dispatch({type: "CHANGE_TASK", prop: prop, value: value});
+    },
+    registerChange: (prop: string, type: string, newValue: any = null, oldValue: any = null) => (dispatch: Function, getState: Function) => {
+        switch(type){
+            case 'insert':{
+                const change: TaskChange = {
+                    fieldName: prop,
+                    oldValue: oldValue,
+                    newValue: newValue,
+                    created: new Date()
+                }
+                const action: insertChange = {
+                    payload: change,
+                    type: 'INSERT_CHANGE'
+                } 
+
+                dispatch(action);
+            }
+            break;
+            case 'update':{
+                const change: TaskChange = {
+                    fieldName: prop,
+                    oldValue: oldValue,
+                    newValue: newValue,
+                    created: new Date()
+                }
+                const action: updateChange = {
+                    payload: change,
+                    type: 'UPDATE_CHANGE'
+                } 
+                
+                dispatch(action);
+            }
+            break;
+            case 'remove':{
+                const action: removeChange = {
+                    type: 'REMOVE_CHANGE',
+                    payload: prop
+                }
+                dispatch(action);
+            }
+            break;
+        }
     },
     save: (task: Task): AppThunkAction<saveTask> => (dispatch:Function, getState: Function) => {
         const requestData = {
@@ -81,17 +141,41 @@ export const actionCreators = {
     }
 }
 
-type KnownAction = loadTask & changeTask & saveTask & hideMessage & loadHistory;
+type KnownAction = loadTask & changeTask & saveTask & hideMessage & loadHistory & insertChange & updateChange & removeChange;
 
 export const reducer: Reducer<TaskState> = (state: TaskState = initialState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
     switch(action.type){
         case "LOAD_TASK":
-            return {...state, currentTask: action.payload}
+            return {...state, currentTask: action.payload, initialTask: action.payload, taskChanges: []};
         case "CHANGE_TASK":
             let currentTask = {...state.currentTask};
             currentTask[action.prop] = action.value;
             return {...state, currentTask: currentTask, isChanged: true };
+        case "INSERT_CHANGE":{
+            let changes = state.taskChanges.map(el => {
+                return {...el};
+            });
+            changes.push(action.payload);
+            return {...state, taskChanges: changes};
+        }
+        case "UPDATE_CHANGE": {
+            let changes = state.taskChanges.map(el => {
+                return {...el};
+            });
+            let change: TaskChange = changes[action.payload.fieldName];
+            if(change){
+                change.newValue = action.payload.newValue;
+                change.created = action.payload.created;
+            }
+            return {...state, taskChanges: changes};
+        }
+        case "REMOVE_CHANGE":{
+            let changes = state.taskChanges.filter(el => el.fieldName !== action.payload).map(el => {
+                return {...el};
+            });
+            return {...state, taskChanges: changes};
+        }
         case "SAVE_TASK":
             return {...state, isChanged: false, showSaveMessage: true};
         case "HIDE_MESSAGE":

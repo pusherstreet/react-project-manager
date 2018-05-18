@@ -17,13 +17,29 @@ class Task extends React.Component<TaskProps, {comment: string}>{
         this.props.loadHistory(this.props.match.params.id);
     }
     componentWillUnmount(){
-        if(this.props.task.isChanged){
+        if(this.props.task.taskChanges.length){
             confirm('Save changes?') && this.props.save(this.props.task.currentTask);
         }
     }
     changeTask = (event) => {
         let target = event.target as HTMLFormElement;
-        this.props.change(target.name, target.value);
+        const prop = target.name;
+
+        const changes = this.props.task.taskChanges;
+        const initial = this.props.task.initialTask;
+
+        const newValue = target.value;
+        const oldValue = initial[prop];
+
+        if(oldValue == newValue){
+            this.props.registerChange(prop, 'remove');
+        }else if(changes.findIndex(el => el.fieldName == prop) !== -1){
+            this.props.registerChange(prop, 'update', newValue);
+        }else{
+            this.props.registerChange(prop, 'insert', newValue, oldValue);
+        }
+
+        this.props.change(prop, newValue);
     }
     changeComment = (event) => {
         let target = event.target as HTMLFormElement;
@@ -34,6 +50,7 @@ class Task extends React.Component<TaskProps, {comment: string}>{
             <h2>
                 Task #{this.props.match.params.id} &nbsp;&nbsp;
                 {this.props.task.currentTask && this.props.task.currentTask.title}
+                <span style={{ display: this.props.task.taskChanges.length ? 'inline': 'none'}}>*</span>
             </h2>
             {this.props.task.currentTask &&
             <div>
@@ -65,9 +82,9 @@ class Task extends React.Component<TaskProps, {comment: string}>{
                     <td><input name="effort" id="effort" type="number" value={this.props.task.currentTask.effort} onChange={this.changeTask}/></td>
                 </tr>
                 <tr>
-                    <td><label htmlFor="UserID">Assigned to</label></td>
+                    <td><label htmlFor="userID">Assigned to</label></td>
                     <td>
-                        <select name="UserID" id="UserID" value={this.props.task.currentTask.UserID} onChange={this.changeTask}>
+                        <select name="userID" id="UserID" value={this.props.task.currentTask.UserID} onChange={this.changeTask}>
                         {
                             this.props.project.users.map(user => {
                                 return <option value={user.userID}>{user.email}</option>
