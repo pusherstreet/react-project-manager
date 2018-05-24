@@ -21,15 +21,24 @@ class Task extends React.Component<TaskProps, {comment: string}>{
             confirm('Save changes?') && this.props.save(this.props.task.currentTask);
         }
     }
-    changeTask = (event) => {
-        let target = event.target as HTMLFormElement;
-        const prop = target.name;
-
-        const changes = this.props.task.taskChanges;
+    registerChanges = (target) => {
+        let htmlElement = target as HTMLFormElement;
+        let prop, newValue, oldValue;
         const initial = this.props.task.initialTask;
 
-        const newValue = target.value;
-        const oldValue = initial[prop];
+        if(htmlElement.tagName == 'SELECT'){
+            const selectElement = target as HTMLSelectElement;
+            prop = selectElement.id;
+            
+            newValue = selectElement.options[selectElement.selectedIndex].text;
+            console.log('newValue', newValue);
+            oldValue = selectElement.options[initial[selectElement.name]-1].text;
+        }else{
+            prop = htmlElement.name;
+            newValue = htmlElement.value;
+            oldValue = initial[prop];
+        }
+        const changes = this.props.task.taskChanges;
 
         if(oldValue == newValue){
             this.props.registerChange(prop, 'remove');
@@ -38,8 +47,11 @@ class Task extends React.Component<TaskProps, {comment: string}>{
         }else{
             this.props.registerChange(prop, 'insert', newValue, oldValue);
         }
-
-        this.props.change(prop, newValue);
+    }
+    changeTask = (event) => {
+        this.registerChanges(event.target);
+        let target = event.target as HTMLFormElement;
+        this.props.change(target.name, target.value);
     }
     addComment = () => {
         this.setState({comment: ''}); 
@@ -73,7 +85,7 @@ class Task extends React.Component<TaskProps, {comment: string}>{
                 <tr>
                   <td><label htmlFor="statusID">Status</label></td>
                   <td>
-					<select id="statusID" name="statusID" value={this.props.task.currentTask.statusID} onChange={this.changeTask} style={{width: "100%"}} >
+					<select id="Status" name="statusID" value={this.props.task.currentTask.statusID} onChange={this.changeTask} style={{width: "100%"}} >
 						<option value="1">Done</option>
 						<option value="2">Created</option>
                         <option value="3">Canceled</option>
@@ -88,7 +100,7 @@ class Task extends React.Component<TaskProps, {comment: string}>{
                 <tr>
                     <td><label htmlFor="userID">Assigned to</label></td>
                     <td>
-                        <select name="userID" id="UserID" value={this.props.task.currentTask.UserID} onChange={this.changeTask}>
+                        <select name="userID" id="User" value={this.props.task.currentTask.UserID} onChange={this.changeTask}>
                         {
                             this.props.project.users.map(user => {
                                 return <option value={user.userID}>{user.email}</option>

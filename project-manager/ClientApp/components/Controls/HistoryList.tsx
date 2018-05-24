@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TaskHistory } from '../../models/index';
 import { Right } from 'react-bootstrap/lib/Media';
-import {getTaskHistoryHtml} from '../../helpers/html';
+import TaskHistoryLog from './TaskHistoryLog';
 
 export default class HistoryList extends React.Component<{historyList: TaskHistory[]}, {}>{
     render(){
@@ -15,7 +15,7 @@ export default class HistoryList extends React.Component<{historyList: TaskHisto
         });
         return <div>
         {orderedList.map((el: TaskHistory) => {
-            return getTaskHistoryHtml(el);
+            return <TaskHistoryLog taskHistory={el} />;
         })}
         </div>
     }

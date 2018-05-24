@@ -114,7 +114,7 @@ export const actionCreators = {
             break;
         }
     },
-    save: (task: Task): AppThunkAction<saveTask> => (dispatch:Function, getState: Function) => {
+    save: (task: Task, changes?: TaskChange[]): AppThunkAction<saveTask> => async (dispatch:Function, getState: Function) => {
         const requestData = {
             method: 'PUT',
             body: JSON.stringify(task),
@@ -122,15 +122,35 @@ export const actionCreators = {
                 'Content-Type': 'application/json;'
             }
         } 
-        callApi(`api/Tasks/${task.taskID}`, requestData)
-        .then(response => {
-            if(response.ok){
-                dispatch({type: 'SAVE_TASK'});
-                setTimeout(() => {dispatch({type: 'HIDE_MESSAGE', msgType: 'save'})}, 1000)
-            }else{
-                console.log(response.statusText);
+        let response = await callApi(`api/Tasks/${task.taskID}`, requestData);
+        if(response.ok){
+            dispatch({type: 'SAVE_TASK'});
+            setTimeout(() => {dispatch({type: 'HIDE_MESSAGE', msgType: 'save'})}, 1000);
+            if(changes && changes.length){
+                const payload = {
+                    message: '',
+                    taskID: task.taskID,
+                    created: new Date(),
+                    changes: changes
+                };
+                
+                const requestData = {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    headers: {
+                        'Content-Type': 'application/json;'
+                    }
+                };
+
+                let response = await callApi('api/history', requestData);
+                let data = await response.json();
+                const action: addComment = {
+                    type: "ADD_COMMENT",
+                    payload: data
+                };
+                dispatch(action);
             }
-        })
+        }
     },
     hideMsg: (type: string) => (dispatch:Function, getState: Function) => {
         dispatch({type: 'HIDE_MESSAGE', msgType: type});
@@ -192,7 +212,8 @@ export const reducer: Reducer<TaskState> = (state: TaskState = initialState, inc
             let changes = state.taskChanges.map(el => {
                 return {...el};
             });
-            let change: TaskChange = changes[action.payload.fieldName];
+
+            let change: TaskChange = changes.find(x => x.fieldName == action.payload.fieldName);
             if(change){
                 change.newValue = action.payload.newValue;
                 change.created = action.payload.created;

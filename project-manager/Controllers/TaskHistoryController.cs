@@ -31,6 +31,12 @@ namespace project_manager.Controllers
 
             db.TaskHistories.Add(history);
 
+            int changesCount = db.TaskChages.Count();
+
+            foreach(var change in history.Changes){
+                change.TaskChangeID = ++changesCount;
+            }
+
             db.TaskChages.AddRange(history.Changes);
 
             db.SaveChanges();

@@ -1,0 +1,2 @@
+1. Update gapi.
+2. Add slotStart and slotEnd in react-big-calendar.
