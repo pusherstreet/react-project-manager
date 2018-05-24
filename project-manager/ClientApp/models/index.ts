@@ -55,7 +55,8 @@ export interface TaskHistory{
     created: Date,
     userID: string,
     user: User,
-    taskID: number
+    taskID: number,
+    changes: any[]
 }
 export interface TaskChange{
     fieldName: string,

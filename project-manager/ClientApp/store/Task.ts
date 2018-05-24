@@ -143,12 +143,12 @@ export const actionCreators = {
             dispatch({type: "LOAD_TASK_HISTORY", payload: history});
         });
     },
-    addComment: (text: string, taskID: number, userID: string): AppThunkAction<addComment> => (dispatch: Function, getState: Function) => {
+    addComment: (text: string, taskID: number): AppThunkAction<addComment> => (dispatch: Function, getState: Function) => {
         const payload = {
             message: text,
             taskID: taskID,
-            userID: userID,
-            created: new Date()
+            created: new Date(),
+            changes: []
         };
         
         const requestData = {
@@ -170,7 +170,7 @@ export const actionCreators = {
     }
 }
 
-type KnownAction = loadTask & changeTask & saveTask & hideMessage & loadHistory & insertChange & updateChange & removeChange;
+type KnownAction = loadTask & changeTask & saveTask & hideMessage & loadHistory & insertChange & updateChange & removeChange & addComment;
 
 export const reducer: Reducer<TaskState> = (state: TaskState = initialState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
@@ -206,13 +206,17 @@ export const reducer: Reducer<TaskState> = (state: TaskState = initialState, inc
             return {...state, taskChanges: changes};
         }
         case "SAVE_TASK":
-            return {...state, isChanged: false, showSaveMessage: true};
+            return {...state, taskChanges: [], showSaveMessage: true};
         case "HIDE_MESSAGE":
             return {...state, showSaveMessage: false};
         case "LOAD_TASK_HISTORY":
             return {...state, historyList: action.payload};
         case "ADD_COMMENT":{
-            
+            let list = state.historyList.map(el => {
+                return {...el};
+            });
+            list.push(action.payload);
+            return {...state, historyList: list};
         }
     }
     return state;

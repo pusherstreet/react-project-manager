@@ -1,19 +1,21 @@
 import * as React from 'react';
 import { TaskHistory } from '../../models/index';
+import { Right } from 'react-bootstrap/lib/Media';
+import {getTaskHistoryHtml} from '../../helpers/html';
 
 export default class HistoryList extends React.Component<{historyList: TaskHistory[]}, {}>{
     render(){
+        const orderedList = this.props.historyList.sort((a, b) => {
+            const left = new Date(a.created);
+            const right = new Date(b.created);
+
+            if(left > right) return -1;
+            if(left < right) return 1;
+            return 0;
+        });
         return <div>
-        {this.props.historyList.map((el: TaskHistory) => {
-            return <div className='history-summary' key={el.taskHistoryID}>
-                <div className="history-text-block">
-                    <b>{el.user.email}:</b> {el.message}
-                </div>
-                <div className="history-info-block">
-                {new Date(el.created).toUTCString()}
-                </div>
-                
-            </div>
+        {orderedList.map((el: TaskHistory) => {
+            return getTaskHistoryHtml(el);
         })}
         </div>
     }

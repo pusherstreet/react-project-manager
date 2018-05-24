@@ -24,10 +24,15 @@ namespace project_manager.Controllers
             return list;
         }
         [HttpPost]
-        public TaskHistory Post (TaskHistory history){
+        public TaskHistory Post ([FromBody]TaskHistory history){
+
+            history.UserID = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name).UserID;
+            history.TaskHistoryID = db.TaskHistories.Count() + 1;
+
+            db.TaskHistories.Add(history);
 
             db.TaskChages.AddRange(history.Changes);
-            db.TaskHistories.Add(history);
+
             db.SaveChanges();
             return history;
         }

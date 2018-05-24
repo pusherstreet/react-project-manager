@@ -41,6 +41,10 @@ class Task extends React.Component<TaskProps, {comment: string}>{
 
         this.props.change(prop, newValue);
     }
+    addComment = () => {
+        this.setState({comment: ''}); 
+        this.props.addComment(this.state.comment, this.props.task.currentTask.taskID);
+    }
     changeComment = (event) => {
         let target = event.target as HTMLFormElement;
         this.setState({comment: target.value});
@@ -105,7 +109,7 @@ class Task extends React.Component<TaskProps, {comment: string}>{
            <h2>History</h2>
            <div className="comment-block">
             <textarea name="comment" id="comment" value={this.state.comment} onChange={this.changeComment} className="form-control" rows={4} placeholder="Type your comment here"></textarea>
-            <div><button className="btn btn-success">Add comment</button></div>
+            <div><button onClick={this.addComment}className="btn btn-success">Add comment</button></div>
            </div>
            <HistoryList historyList={this.props.task.historyList} />
         </div>

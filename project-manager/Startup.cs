@@ -201,6 +201,13 @@ namespace project_manager
                 UserID = guid,
                 Message = "Hello, am create this task!",
             });
+            db.TaskChages.Add(new TaskChange{
+                TaskChangeID = 1,
+                TaskHistoryID = 1,
+                Name = "Status",
+                OldValue = "Created",
+                NewValue = "Done"
+            });
             db.TaskHistories.Add(new TaskHistory{
                 TaskHistoryID = 2,
                 TaskID = 1,
