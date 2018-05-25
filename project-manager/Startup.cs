@@ -210,7 +210,7 @@ namespace project_manager
             db.TaskChages.Add(new TaskChange{
                 TaskChangeID = 1,
                 TaskHistoryID = 1,
-                Name = "Status",
+                FieldName = "Status",
                 OldValue = "Created",
                 NewValue = "Done"
             });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TaskHistory } from '../../models';
+import { TaskHistory, TaskChange } from '../../models';
 
 export default class TaskHistoryLog extends React.Component<{ taskHistory: TaskHistory }, { showChanges: boolean }> {
 
@@ -18,8 +18,12 @@ export default class TaskHistoryLog extends React.Component<{ taskHistory: TaskH
 
         const changesCount = taskHistory.changes.length;
 
-        const message = <span><b>{taskHistory.user.email} </b> added comment: "{taskHistory.message}"
-            {changesCount > 0 ? <span> and <b>{changesCount}</b> other <a href="#" onClick={this.toggleChanges}>{changesCount == 1 ? "change" : "changes"}</a></span> : ""}.</span>;
+        const change = taskHistory.changes[0] as TaskChange;
+        const action = taskHistory.message ? `added comment: ${taskHistory.message}`: change ? <span>changed  <b>{change.fieldName}</b> to <b>{change.newValue}</b></span>: '';
+        const minChanges = taskHistory.message ? 0 : 1;
+
+        const message = <span><b>{taskHistory.user.email} </b> {action} 
+            {changesCount > minChanges ? <span> and <b>{changesCount}</b> other <a href="#" onClick={this.toggleChanges}>{changesCount == 1 ? "change" : "changes"}</a></span> : ""}.</span>;
 
         return <div className='history-summary' key={taskHistory.taskHistoryID}>
             <div className="history-text-block">
@@ -38,7 +42,7 @@ export default class TaskHistoryLog extends React.Component<{ taskHistory: TaskH
                         </tr>
                         {taskHistory.changes.map((change, key) => {
                             return <tr key={key} className="history-change">
-                                <td>{change.name}</td>
+                                <td>{change.fieldName}</td>
                                 <td>{change.oldValue}</td>
                                 <td>{change.newValue}</td>
                             </tr>

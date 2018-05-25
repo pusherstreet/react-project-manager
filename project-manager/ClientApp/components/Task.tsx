@@ -30,9 +30,10 @@ class Task extends React.Component<TaskProps, {comment: string}>{
             const selectElement = target as HTMLSelectElement;
             prop = selectElement.id;
             
+            console.log(selectElement.options);
+
             newValue = selectElement.options[selectElement.selectedIndex].text;
-            console.log('newValue', newValue);
-            oldValue = selectElement.options[initial[selectElement.name]-1].text;
+            oldValue = selectElement.options.namedItem(initial[selectElement.name]).text;
         }else{
             prop = htmlElement.name;
             newValue = htmlElement.value;
@@ -86,10 +87,10 @@ class Task extends React.Component<TaskProps, {comment: string}>{
                   <td><label htmlFor="statusID">Status</label></td>
                   <td>
 					<select id="Status" name="statusID" value={this.props.task.currentTask.statusID} onChange={this.changeTask} style={{width: "100%"}} >
-						<option value="1">Done</option>
-						<option value="2">Created</option>
-                        <option value="3">Canceled</option>
-                        <option value="4">Approved</option>
+						<option name="1" value="1">Done</option>
+						<option name="2" value="2">Created</option>
+                        <option name="3" value="3">Canceled</option>
+                        <option name="4" value="4">Approved</option>
 					</select>
 					</td>
                 </tr>
@@ -103,7 +104,7 @@ class Task extends React.Component<TaskProps, {comment: string}>{
                         <select name="userID" id="User" value={this.props.task.currentTask.UserID} onChange={this.changeTask}>
                         {
                             this.props.project.users.map(user => {
-                                return <option value={user.userID}>{user.email}</option>
+                                return <option name={user.userID} value={user.userID}>{user.email}</option>
                             })
                         }
                         </select>
@@ -112,7 +113,7 @@ class Task extends React.Component<TaskProps, {comment: string}>{
             </tbody>
             </table>
             <div>
-                <button onClick={() => { this.props.save(this.props.task.currentTask) }} className="btn btn-success">Save</button>
+                <button onClick={() => { this.props.save(this.props.task.currentTask, this.props.task.taskChanges) }} className="btn btn-success">Save</button>
             </div>
             </div>
             
