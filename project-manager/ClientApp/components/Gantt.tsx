@@ -4,15 +4,22 @@ import 'dhtmlx-gantt/codebase/dhtmlxgantt.css';
  
 export default class Gantt extends React.Component<any, {}> {
   componentDidMount() {
-        console.log('mount')
         gantt.init(this.ganttContainer);
         gantt.attachEvent("onAfterLinkAdd", (id: any, item: any) => {
             this.props.onlinkchange(item);
-        });
+		});
+		gantt.attachEvent("onBeforeTaskAdd", (id, item) => {
+			this.props.ontaskadd(item);
+			return false;
+		});
+		gantt.attachEvent("onAfterTaskDelete", (id, item) => {
+			this.props.ontaskdelete(id);
+		});
         gantt.attachEvent("onAfterTaskUpdate", (id: any, type:string, e:any) => {
 			if(type == 'resize')
             	this.props.ontaskresize(id, e);
         })
+        gantt.config.highlight_critical_path = true;
         gantt.parse(this.props.tasks);
   }
 

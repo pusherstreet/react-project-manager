@@ -1,15 +1,15 @@
 export interface Task {
-    taskID: number;
+    taskID?: number;
     title: string;
     description: string;
-    created: Date;
+    created?: Date;
     start: Date;
     end: Date;
     statusID: number;
-    status: any;
-    User: User,
-    UserID: string,
-    effort: number
+    status?: any;
+    User?: User,
+    UserID?: string,
+    effort?: number
 }
 
 export interface Status{

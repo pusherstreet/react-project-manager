@@ -2,7 +2,7 @@ import { fetch, addTask } from 'domain-task';
 import { Action, Reducer, ActionCreator } from 'redux';
 import { AppThunkAction } from './';
 import callApi from '../helpers/callApi';
-import {BoardModel} from '../models';
+import {BoardModel, Task} from '../models';
 
 export interface GanttState{
     tasks: {
@@ -60,6 +60,38 @@ export const ActionCreators = {
     },
     resizeTask: (id: any, event: any): AppThunkAction<LoadTasks> => (dispatch: any, getState: Function) => {
         console.log(event);
+    },
+    addTask: (task: any): AppThunkAction<LoadTasks> => async (dispatch: any, getState: Function) => {
+        let payload: Task  = {
+            start: task.start_date,
+            end: task.end_date,
+            title: task.text,
+            description: task.text,
+            statusID: 1
+        };
+        let requestData = {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+                'Content-Type': 'application/json;'
+            }
+        }
+        let project = getState().project.currentProject;
+        let projectID = project ? project.projectID : 1;
+        await callApi(`api/Tasks/${projectID}`, requestData)
+        let response = await callApi('api/Tasks/gantt');
+        let tasks = await response.json();
+        dispatch({type: "LOAD_GANTT_TASKS", payload: tasks})
+    },
+
+    deleteTask: (id: number): AppThunkAction<LoadTasks> => async (dispatch: any, getState: Function) => {
+        const requestData = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json;'
+            }
+        }
+        callApi(`api/tasks/${id}`, requestData);
     }
 }
 

@@ -85,12 +85,12 @@ namespace project_manager.Controllers
         
         // PUT: api/Tasks/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]Task task)
-        {
-            
+        public Task Put(int id, [FromBody]Task task)
+        {      
             db.Entry(task).State = EntityState.Modified;
             db.SaveChanges();
-          
+
+            return db.Tasks.Include(x => x.Status).Include(x => x.User).FirstOrDefault(x => x.TaskID == task.TaskID);
         }
 
         [Route("setstatus/{id}")]

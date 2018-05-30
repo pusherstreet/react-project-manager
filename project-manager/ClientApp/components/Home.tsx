@@ -88,5 +88,7 @@ export default connect(
     { loadData: Project.actionCreators.loadTasks, 
         login: actionCreators.login, 
         selectTask: HomeStore.actionCreators.selectTask,
-        addTask :  Project.actionCreators.addTask}
+        addTask :  Project.actionCreators.addTask,
+        closeModal : Project.actionCreators.closeTask
+    }
 )(Home) as typeof Home;

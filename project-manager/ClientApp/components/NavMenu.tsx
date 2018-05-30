@@ -61,9 +61,6 @@ export default class NavMenu extends React.Component<any, {}> {
                         </li>
                         <li>
                             <div className="navbar-title">Settings</div>
-                            <NavLink to={ '/account' } activeClassName='active'>
-                                <span className='glyphicon glyphicon-user'></span> Account
-                            </NavLink>
                             <NavLink to={ '/configuration' } activeClassName='active'>
                                 <span className='glyphicon glyphicon-cog'></span> Configuration
                             </NavLink>

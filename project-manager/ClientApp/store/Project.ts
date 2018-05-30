@@ -74,25 +74,21 @@ export const actionCreators = {
             }
         });
     },
-    // callback hell, should be async/await soon
-    setCurrentProject: (project: any): AppThunkAction<CurrentProject> => (dispatch: any, getState: Function) => {
+    
+    setCurrentProject: (project: any): AppThunkAction<CurrentProject> => async (dispatch: any, getState: Function) => {
         if(getState().project.currentProject.projectID !== project.projectID){
-            callApi(`api/tasks/list/${project.projectID}`)
-            .then(response => response.json())
-            .then(data => {
-                const tasks = data;
-                callApi(`api/projects/users/${project.projectID}`)
-                .then(response => response.json())
-                .then(users => {
-                    dispatch({type: "CURRENT_PROJECT_CHANGE", project: project, tasks: tasks, users: users});
-                })
-            });
             // we need to full reload when change current project
             if(getState().routing.location.pathname !== '/')
                 store.dispatch(push('/'));
+            let tasksReponse = await callApi(`api/tasks/list/${project.projectID}`);
+            let tasks = await tasksReponse.json();
+            let userResponse = await callApi(`api/projects/users/${project.projectID}`);
+            let users = await userResponse.json();
+            dispatch({type: "CURRENT_PROJECT_CHANGE", project: project, tasks: tasks, users: users});
+
         }
     },
-    updateTask: (task: Task): AppThunkAction<any> => (dispatch: any, getState: Function) => {
+    updateTask: (task: Task): AppThunkAction<any> => async (dispatch: any, getState: Function) => {
         let payload = task;
         let requestData = {
             method: 'PUT',
@@ -101,16 +97,14 @@ export const actionCreators = {
                 'Content-Type': 'application/json;'
             }
         }
-        callApi(`api/Tasks/${task.taskID}`, requestData)
-        .then(response => {
-            if(response.ok){
-                dispatch({type: 'CLOSE_CALENDAR_TASK'});
-                dispatch({type: 'UPDATE_CALENDAR_TASK', task: task});
-            }else{
-                console.log(response.statusText)
-            }
-        })
+        let response = await callApi(`api/Tasks/${task.taskID}`, requestData);
+        let data = await response.json();
+        dispatch({type: 'CLOSE_CALENDAR_TASK'});
+        dispatch({type: 'UPDATE_CALENDAR_TASK', task: data});
         
+    },
+    closeTask: () => (dispatch, getState) => {
+        dispatch({type: 'CLOSE_CALENDAR_TASK'});
     },
     addTask: (task: Task): AppThunkAction<any> => (dispatch: any, getState: Function) => {
         let payload = task;

@@ -124,7 +124,9 @@ export const actionCreators = {
         } 
         let response = await callApi(`api/Tasks/${task.taskID}`, requestData);
         if(response.ok){
-            dispatch({type: 'SAVE_TASK'});
+            const data = await response.json();
+            dispatch({type: 'SAVE_TASK', payload: data});
+
             setTimeout(() => {dispatch({type: 'HIDE_MESSAGE', msgType: 'save'})}, 1000);
             if(changes && changes.length){
                 const payload = {
@@ -227,7 +229,7 @@ export const reducer: Reducer<TaskState> = (state: TaskState = initialState, inc
             return {...state, taskChanges: changes};
         }
         case "SAVE_TASK":
-            return {...state, taskChanges: [], showSaveMessage: true};
+            return {...state, taskChanges: [], showSaveMessage: true, initialTask: action.payload};
         case "HIDE_MESSAGE":
             return {...state, showSaveMessage: false};
         case "LOAD_TASK_HISTORY":
